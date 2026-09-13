@@ -1,6 +1,6 @@
-← [2.12 Subqueries & CTEs](12-subqueries-and-ctes.md)
+← [2.15 Subqueries & CTEs](15-subqueries-and-ctes.md)
 
-# 2.13 Constraints
+# 2.16 Constraints
 
 Before formalizing anything, 3 real-world rules that must never be broken —
 no matter what application code tries to do.
@@ -43,7 +43,7 @@ A primary key must be unique across every row and can never be `NULL`.
 ```sql
 customer_id INTEGER NOT NULL REFERENCES customers(customer_id)
 ```
-Covered fully in [Lesson 2.10](10-relationships-and-foreign-keys.md) — every
+Covered fully in [Lesson 2.13](13-relationships-and-foreign-keys.md) — every
 value must already exist in the referenced table. You can also control what
 happens if the referenced row is later *updated* (rare, but symmetric with
 `ON DELETE`):
@@ -57,7 +57,7 @@ customer_id INTEGER REFERENCES customers(customer_id)
 ## Step 3 — `UNIQUE`: no two rows share this value
 
 ```sql
-email TEXT NOT NULL UNIQUE   -- from customers, Lesson 2.10
+email TEXT NOT NULL UNIQUE   -- from customers, Lesson 2.13
 ```
 
 ```sql
@@ -73,7 +73,7 @@ non-`NULL` value must be distinct.
 ## Step 4 — `CHECK`: a custom validation rule
 
 ```sql
-quantity INTEGER NOT NULL CHECK (quantity > 0)   -- from order_items, Lesson 2.10
+quantity INTEGER NOT NULL CHECK (quantity > 0)   -- from order_items, Lesson 2.13
 ```
 
 ```sql
@@ -107,7 +107,7 @@ TABLE` the moment you notice a gap, exactly like this.
 ```sql
 stock      INTEGER NOT NULL DEFAULT 0                     -- products, Lesson 2.2
 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP    -- products, Lesson 2.2
-order_date DATE NOT NULL DEFAULT CURRENT_DATE              -- orders, Lesson 2.10
+order_date DATE NOT NULL DEFAULT CURRENT_DATE              -- orders, Lesson 2.13
 ```
 
 - `NOT NULL` — this field must always have a value.
@@ -116,7 +116,7 @@ order_date DATE NOT NULL DEFAULT CURRENT_DATE              -- orders, Lesson 2.1
 ## Step 7 — Composite primary keys
 
 ```sql
-PRIMARY KEY (order_id, product_id)   -- order_items, Lesson 2.10
+PRIMARY KEY (order_id, product_id)   -- order_items, Lesson 2.13
 ```
 
 Neither `order_id` nor `product_id` is unique alone in `order_items` (an
@@ -147,4 +147,4 @@ application code simply can't violate them, which is exactly why they're
 worth adding deliberately, not left to "we'll validate it in the app."
 
 ---
-← [2.12 Subqueries & CTEs](12-subqueries-and-ctes.md) | Next: [2.14 Transactions →](14-transactions.md)
+← [2.15 Subqueries & CTEs](15-subqueries-and-ctes.md) | Next: [2.17 Transactions →](17-transactions.md)

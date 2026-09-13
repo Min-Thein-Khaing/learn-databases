@@ -19,7 +19,7 @@ VS Code, and most Markdown viewers), plus rendered PNG charts in
 | Module | Lessons | Topic |
 |---|---|---|
 | [01 — Fundamentals](01-fundamentals/) | 8 | What data is, database types, brands, installation (native + Docker), GUI tools |
-| [02 — SQL (PostgreSQL)](02-sql/) | 21 | A full relational system: CRUD, joins, normalization, transactions, indexes, the CLI, users, capstone |
+| [02 — SQL (PostgreSQL)](02-sql/) | 21 | A full relational system: CRUD, table management, the CLI, users, normalization, joins, transactions, indexes, capstone |
 | [03 — NoSQL (MongoDB)](03-mongodb/) | 20 | The exact same system, rebuilt as documents: embedding, `$lookup`, pipelines, capstone |
 | [04 — Comparison](04-comparison/) | 6 | Same data and queries side by side, pros/cons, real-world scenarios, decision framework |
 

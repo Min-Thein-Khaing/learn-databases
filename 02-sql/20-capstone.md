@@ -1,4 +1,4 @@
-← [2.19 User & Permission Management](19-user-permission-management.md)
+← [2.19 Views](19-views.md)
 
 # 2.20 Capstone: Product Reviews
 
@@ -10,7 +10,7 @@ and views along the way.
 ## Step 1 — Design (Normalization + Relationships)
 
 A review belongs to one customer, about one product. Following
-[Lesson 2.9](09-normalization.md) and [Lesson 2.10](10-relationships-and-foreign-keys.md):
+[Lesson 2.12](12-normalization.md) and [Lesson 2.13](13-relationships-and-foreign-keys.md):
 
 ```mermaid
 erDiagram
@@ -28,7 +28,7 @@ erDiagram
 
 ## Step 2 — Build the table (Constraints)
 
-Applying every constraint type from [Lesson 2.13](13-constraints.md):
+Applying every constraint type from [Lesson 2.16](16-constraints.md):
 
 ```sql
 CREATE TABLE reviews (
@@ -46,7 +46,7 @@ CREATE TABLE reviews (
 
 A real "submit review" action often updates more than one thing at once —
 here, inserting the review and (imagining a `products.review_count` counter
-column) keeping it in sync, following [Lesson 2.14](14-transactions.md)'s
+column) keeping it in sync, following [Lesson 2.17](17-transactions.md)'s
 pattern:
 
 ```sql
@@ -66,7 +66,7 @@ application-level check in a real system).
 
 ## Step 4 — Add the index (Indexes & Performance)
 
-Following [Lesson 2.15](15-indexes-and-performance.md) — `customer_id` and
+Following [Lesson 2.18](18-indexes-and-performance.md) — `customer_id` and
 `product_id` are foreign keys, so they're **not** auto-indexed:
 
 ```sql
@@ -96,7 +96,7 @@ ORDER BY avg_rating DESC NULLS LAST;
 | 10 | Mac Mini | 0 | `NULL` |
 | 11 | iPhone 17 | 0 | `NULL` |
 
-`LEFT JOIN` (from [Lesson 2.11](11-joins.md)) keeps every product, even the 4
+`LEFT JOIN` (from [Lesson 2.14](14-joins.md)) keeps every product, even the 4
 with zero reviews. `NULLS LAST` sends products with no rating at all to the
 bottom, instead of PostgreSQL's default of sorting `NULL` first on a `DESC`
 sort.
@@ -116,7 +116,7 @@ GROUP BY p.product_id, p.name;
 ## Step 7 — The final synthesis query (CTEs + Subqueries)
 
 *"Which products are outperforming average on **both** revenue and rating?"*
-— combining [Lesson 2.12](12-subqueries-and-ctes.md)'s CTEs and subqueries:
+— combining [Lesson 2.15](15-subqueries-and-ctes.md)'s CTEs and subqueries:
 
 ```sql
 WITH product_revenue AS (
@@ -148,7 +148,7 @@ compare.
 
 ## Step 8 — One last access-control touch (User Management)
 
-Following [Lesson 2.19](19-user-permission-management.md), extend
+Following [Lesson 2.11](11-user-permission-management.md), extend
 `app_user`'s permissions to cover the new table:
 
 ```sql
@@ -159,4 +159,4 @@ That's every skill from Part 1, used together on one real feature — design,
 build, secure, and query it, end to end.
 
 ---
-← [2.19 User & Permission Management](19-user-permission-management.md) | Next: [2.21 Part 1 Conclusion →](21-conclusion.md)
+← [2.19 Views](19-views.md) | Next: [2.21 Part 1 Conclusion →](21-conclusion.md)

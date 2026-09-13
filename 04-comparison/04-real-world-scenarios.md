@@ -10,8 +10,8 @@ an actual situation.
 
 **Recommendation: SQL.** Every transfer must debit one account and credit
 another together, with zero tolerance for a partial write or an orphaned
-reference — exactly [Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md)'s
-enforced foreign keys and [Lesson 2.14](../02-sql/14-transactions.md)'s
+reference — exactly [Lesson 2.13](../02-sql/13-relationships-and-foreign-keys.md)'s
+enforced foreign keys and [Lesson 2.17](../02-sql/17-transactions.md)'s
 transaction guarantees, in the one domain where "the database enforces it,
 not just the application" genuinely matters most.
 
@@ -44,7 +44,7 @@ something SQL has no equivalent for at all.
 
 **Recommendation: SQL**, for the core record — enforced relationships
 between patients/doctors/appointments matter for safety and legal
-compliance ([Lesson 2.13](../02-sql/13-constraints.md)'s guaranteed data
+compliance ([Lesson 2.16](../02-sql/16-constraints.md)'s guaranteed data
 integrity). Free-text clinical notes or varying lab-result formats
 *attached* to a patient are a reasonable candidate for MongoDB, or a
 `JSONB` column ([Lesson 2.4](../02-sql/04-postgresql-data-types.md)) inside
@@ -62,8 +62,8 @@ migration needed every time a new feature ships a new field.
 **Recommendation: SQL.** Enrollment is fundamentally relational — students,
 courses, and the many-to-many link between them, with hard rules ("can't
 enroll in a cancelled course," "can't exceed course capacity") that
-[Lesson 2.13](../02-sql/13-constraints.md)'s constraints enforce
-automatically, and [Lesson 2.11](../02-sql/11-joins.md)'s joins query
+[Lesson 2.16](../02-sql/16-constraints.md)'s constraints enforce
+automatically, and [Lesson 2.14](../02-sql/14-joins.md)'s joins query
 naturally.
 
 ## The pattern across all 7

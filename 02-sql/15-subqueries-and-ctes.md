@@ -1,6 +1,6 @@
-← [2.11 Joins](11-joins.md)
+← [2.14 Joins](14-joins.md)
 
-# 2.12 Subqueries & CTEs
+# 2.15 Subqueries & CTEs
 
 Before any syntax, 3 real-world questions that naturally break into steps.
 
@@ -39,7 +39,7 @@ can use. You've already seen the shape informally: anywhere you see a
 
 Every example below uses the same
 `customers`/`orders`/`order_items`/`products` schema from
-[Lesson 2.10](10-relationships-and-foreign-keys.md).
+[Lesson 2.13](13-relationships-and-foreign-keys.md).
 
 ## Step 1 — A subquery in `WHERE`
 
@@ -90,7 +90,7 @@ WHERE customer_id NOT IN (SELECT customer_id FROM orders);
 | Carla Ruiz |
 
 This works correctly here — but only because `orders.customer_id` is
-`NOT NULL` ([Lesson 2.10](10-relationships-and-foreign-keys.md)'s foreign
+`NOT NULL` ([Lesson 2.13](13-relationships-and-foreign-keys.md)'s foreign
 key). **If that subquery could ever return even one `NULL`, `NOT IN` would
 silently return zero rows for the entire query** — a notorious, easy-to-miss
 SQL bug. The safer habit, which works regardless:
@@ -275,4 +275,4 @@ Two parts, always:
 | Recursive CTE (`WITH RECURSIVE`) | Hierarchies/chains of unknown depth — org charts, category trees |
 
 ---
-← [2.11 Joins](11-joins.md) | Next: [2.13 Constraints →](13-constraints.md)
+← [2.14 Joins](14-joins.md) | Next: [2.16 Constraints →](16-constraints.md)

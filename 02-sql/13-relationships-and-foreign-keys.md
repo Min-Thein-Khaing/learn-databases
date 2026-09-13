@@ -1,6 +1,6 @@
-← [2.9 Normalization](09-normalization.md)
+← [2.12 Normalization](12-normalization.md)
 
-# 2.10 Relationships & Foreign Keys
+# 2.13 Relationships & Foreign Keys
 
 Before any SQL, 3 real-world situations where a relationship *must* be
 enforced, not just assumed.
@@ -24,7 +24,7 @@ doesn't exist.
 
 In every scenario, "the application will just be careful" isn't good enough
 — a single bug, script, or rushed migration could break the rule instantly,
-with nobody noticing until reports are already wrong. [Lesson 2.9](09-normalization.md)
+with nobody noticing until reports are already wrong. [Lesson 2.12](12-normalization.md)
 ended with an ER diagram: `customers`, `orders`, `order_items`, and
 `products`. Let's turn that into real, running SQL — with the database
 itself enforcing these relationships, not just documenting them.
@@ -71,7 +71,7 @@ CREATE TABLE order_items (
 
 `unit_price` is deliberately duplicated here from `products.price` — this is
 the same "price at time of purchase" pattern flagged as a *deliberate*
-exception back in [Lesson 2.9](09-normalization.md)'s normalization rules:
+exception back in [Lesson 2.12](12-normalization.md)'s normalization rules:
 `products.price` can change later, but a past order must always show what was
 actually paid at the time.
 
@@ -93,7 +93,7 @@ INSERT INTO customers (name, email, city) VALUES
     ('Carla Ruiz', 'carla@mail.com', 'Chicago');
 ```
 Auto-assigned IDs: Alice = 1, Bob = 2, Carla = 3. Notice **Carla has no
-orders at all** — exactly the insertion-anomaly fix from Lesson 2.9.
+orders at all** — exactly the insertion-anomaly fix from Lesson 2.12.
 
 ```sql
 INSERT INTO orders (customer_id, order_date) VALUES
@@ -112,7 +112,7 @@ INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
     (3, 10, 1, 599.00);   -- order 3: Mac Mini
 ```
 
-This is exactly the data from [Lesson 2.9](09-normalization.md)'s flat table
+This is exactly the data from [Lesson 2.12](12-normalization.md)'s flat table
 — just correctly split across 3 tables now instead of repeated in 1.
 
 ## Step 5 — Referential integrity in action
@@ -165,8 +165,8 @@ data than you intended.
 | `customers` → `orders` | One-to-many | Foreign key on the "many" side (`orders.customer_id`) |
 | `orders` ↔ `products` | Many-to-many | Junction table with foreign keys to both (`order_items`) |
 
-Our schema is now 4 tables, correctly related. [Lesson 2.11](11-joins.md)
+Our schema is now 4 tables, correctly related. [Lesson 2.14](14-joins.md)
 shows how to query across all of them at once.
 
 ---
-← [2.9 Normalization](09-normalization.md) | Next: [2.11 Joins →](11-joins.md)
+← [2.12 Normalization](12-normalization.md) | Next: [2.14 Joins →](14-joins.md)

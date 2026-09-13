@@ -17,17 +17,17 @@ genuinely ready for Part 2.
 | [2.6 Sort](06-sort.md) | `ORDER BY`, `LIMIT`, `OFFSET` |
 | [2.7 Functions](07-functions.md) | Aggregate, math, string, and date functions, plus `COALESCE` |
 | [2.8 Group](08-group.md) | `GROUP BY` and `HAVING` — summaries per category, not just per table |
-| [2.9 Normalization](09-normalization.md) | Why data gets split across tables in the first place |
-| [2.10 Relationships & Foreign Keys](10-relationships-and-foreign-keys.md) | One-to-many and many-to-many, enforced by the database itself |
-| [2.11 Joins](11-joins.md) | Putting split tables back together — `INNER`/`LEFT`/`RIGHT`/`FULL` |
-| [2.12 Subqueries & CTEs](12-subqueries-and-ctes.md) | Multi-step queries, including recursive CTEs for hierarchies |
-| [2.13 Constraints](13-constraints.md) | Rules the database enforces, so bad data can't sneak in |
-| [2.14 Transactions](14-transactions.md) | All-or-nothing guarantees across multiple statements |
-| [2.15 Indexes & Performance](15-indexes-and-performance.md) | Why queries stay fast (or don't) at real scale |
-| [2.16 Views](16-views.md) | Saving a query under a name, reused like a table |
-| [2.17 Table Management](17-table-management.md) | More `CREATE TABLE` patterns, plus `ALTER`/`DROP TABLE` and evolving a schema safely |
-| [2.18 The PostgreSQL CLI](18-postgres-cli.md) | Connecting with `psql`, listing databases/tables, and other everyday meta-commands |
-| [2.19 User & Permission Management](19-user-permission-management.md) | Roles, `GRANT`/`REVOKE`, and least privilege |
+| [2.9 Table Management](09-table-management.md) | More `CREATE TABLE` patterns, plus `ALTER`/`DROP TABLE` and evolving a schema safely |
+| [2.10 The PostgreSQL CLI](10-postgres-cli.md) | Connecting with `psql`, listing databases/tables, and other everyday meta-commands |
+| [2.11 User & Permission Management](11-user-permission-management.md) | Roles, `GRANT`/`REVOKE`, and least privilege |
+| [2.12 Normalization](12-normalization.md) | Why data gets split across tables in the first place |
+| [2.13 Relationships & Foreign Keys](13-relationships-and-foreign-keys.md) | One-to-many and many-to-many, enforced by the database itself |
+| [2.14 Joins](14-joins.md) | Putting split tables back together — `INNER`/`LEFT`/`RIGHT`/`FULL` |
+| [2.15 Subqueries & CTEs](15-subqueries-and-ctes.md) | Multi-step queries, including recursive CTEs for hierarchies |
+| [2.16 Constraints](16-constraints.md) | Rules the database enforces, so bad data can't sneak in |
+| [2.17 Transactions](17-transactions.md) | All-or-nothing guarantees across multiple statements |
+| [2.18 Indexes & Performance](18-indexes-and-performance.md) | Why queries stay fast (or don't) at real scale |
+| [2.19 Views](19-views.md) | Saving a query under a name, reused like a table |
 | [2.20 Capstone](20-capstone.md) | Every skill above, used together on one real feature |
 
 ## The one idea to carry forward

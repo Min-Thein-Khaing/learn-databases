@@ -1,6 +1,6 @@
-← [2.10 Relationships & Foreign Keys](10-relationships-and-foreign-keys.md)
+← [2.13 Relationships & Foreign Keys](13-relationships-and-foreign-keys.md)
 
-# 2.11 Joins
+# 2.14 Joins
 
 This is the single most important skill for querying real, related data.
 Before any code, 3 real-world situations where you'd need one.
@@ -31,13 +31,13 @@ of them.
 Given those 3 scenarios: a **join** combines rows from two (or more) tables
 into one result, matched by a shared piece of information — usually an ID
 that one table stores as a foreign key pointing at another (exactly what
-[Lesson 2.10](10-relationships-and-foreign-keys.md) set up). In scenario 1,
+[Lesson 2.13](13-relationships-and-foreign-keys.md) set up). In scenario 1,
 that shared ID is the customer ID sitting on every order; in scenario 3, it's
 the doctor ID and patient ID sitting on every appointment.
 
 ## Why joins exist at all
 
-[Lesson 2.9](09-normalization.md) split one messy table into several clean
+[Lesson 2.12](12-normalization.md) split one messy table into several clean
 ones specifically to stop repeating the same information everywhere. But that
 means the *pieces* of any real answer — like all 3 scenarios above — now live
 in different tables. A join is simply how you put those pieces back together
@@ -47,7 +47,7 @@ data clean.
 ## Now, the same idea in SQL
 
 Every example below runs against the exact schema and data from
-[Lesson 2.10](10-relationships-and-foreign-keys.md) — our own version of the
+[Lesson 2.13](13-relationships-and-foreign-keys.md) — our own version of the
 "shop" scenario above: `customers`, `orders`, `order_items`, and `products`.
 
 ## Step 0 — The data we're working with
@@ -116,7 +116,7 @@ left-to-right — `RIGHT JOIN` is rare to see in real code.
 
 ## Step 4 — `FULL OUTER JOIN`: everything from both sides
 
-Our `orders.customer_id` foreign key ([Lesson 2.10](10-relationships-and-foreign-keys.md))
+Our `orders.customer_id` foreign key ([Lesson 2.13](13-relationships-and-foreign-keys.md))
 *guarantees* every order has a real customer — so there's no such thing as an
 "orphan order" in this schema, and a `FULL OUTER JOIN` between `customers`
 and `orders` would look identical to Step 2's `LEFT JOIN`. `FULL OUTER JOIN`
@@ -203,4 +203,4 @@ answer — everything from here builds on being comfortable combining tables
 this way.
 
 ---
-← [2.10 Relationships & Foreign Keys](10-relationships-and-foreign-keys.md) | Next: [2.12 Subqueries & CTEs →](12-subqueries-and-ctes.md)
+← [2.13 Relationships & Foreign Keys](13-relationships-and-foreign-keys.md) | Next: [2.15 Subqueries & CTEs →](15-subqueries-and-ctes.md)

@@ -1,9 +1,12 @@
-← [2.8 Group](08-group.md)
+← [2.11 User & Permission Management](11-user-permission-management.md)
 
-# 2.9 Normalization
+# 2.12 Normalization
 
-Everything so far has lived in one table: `products`. Real systems need more.
-Before any `CREATE TABLE`, 3 real-world situations where a single flat table
+[Lesson 2.9](09-table-management.md) practiced creating several tables, but
+each one stood on its own — nothing forced `authors` and `posts`, say, to
+agree with each other. Real systems need tables that are *deliberately*
+split apart from what would otherwise be one flat, repetitive table. Before
+any `CREATE TABLE`, 3 real-world situations where a single flat table
 breaks down.
 
 ## 3 real-world scenarios
@@ -185,8 +188,8 @@ depend on *"the key, the whole key, and nothing but the key."*
 | 3NF | Every column depends *only* on the key, not on another non-key column | Transitive dependency |
 
 We now have 4 tables instead of 1: `customers`, `orders`, `order_items`, and
-the `products` table we already built. [Lesson 2.10](10-relationships-and-foreign-keys.md)
+the `products` table we already built. [Lesson 2.13](13-relationships-and-foreign-keys.md)
 turns this ER diagram into real `CREATE TABLE` statements with foreign keys.
 
 ---
-← [2.8 Group](08-group.md) | Next: [2.10 Relationships & Foreign Keys →](10-relationships-and-foreign-keys.md)
+← [2.11 User & Permission Management](11-user-permission-management.md) | Next: [2.13 Relationships & Foreign Keys →](13-relationships-and-foreign-keys.md)

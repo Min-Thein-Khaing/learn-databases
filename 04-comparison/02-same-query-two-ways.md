@@ -21,7 +21,7 @@ roughly the same shape of thinking.
 ## Query 2: Find unmatched rows — customers with zero orders
 
 ```sql
--- SQL (Lesson 2.11)
+-- SQL (Lesson 2.14)
 SELECT c.name FROM customers c
 LEFT JOIN orders o ON o.customer_id = c.customer_id
 WHERE o.order_id IS NULL;
@@ -40,7 +40,7 @@ for the same answer.
 ## Query 3: Aggregate — total spent per customer
 
 ```sql
--- SQL (Lesson 2.11)
+-- SQL (Lesson 2.14)
 SELECT c.name, COALESCE(SUM(oi.quantity * oi.unit_price), 0) AS total_spent
 FROM customers c
 LEFT JOIN orders o        ON o.customer_id = c.customer_id

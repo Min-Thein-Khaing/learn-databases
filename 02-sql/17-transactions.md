@@ -1,6 +1,6 @@
-← [2.13 Constraints](13-constraints.md)
+← [2.16 Constraints](16-constraints.md)
 
-# 2.14 Transactions
+# 2.17 Transactions
 
 Before any code, 3 real-world situations that need several steps to happen
 together, or not at all.
@@ -54,7 +54,7 @@ BEGIN;
 INSERT INTO orders (customer_id, order_date) VALUES (3, '2026-03-10');
 INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (4, 4, -2, 599.00);
 -- ERROR: new row for relation "order_items" violates check constraint "order_items_quantity_check"
--- (typo: quantity should be 2, not -2 — Lesson 2.13's CHECK constraint catches it)
+-- (typo: quantity should be 2, not -2 — Lesson 2.16's CHECK constraint catches it)
 
 UPDATE products SET stock = stock - 2 WHERE product_id = 4;
 -- ERROR: current transaction is aborted, commands ignored until end of transaction block
@@ -142,4 +142,4 @@ handled safely without a separate read-then-write race.
 | `ROLLBACK TO name` | Undoes back to that savepoint only, keeping earlier changes |
 
 ---
-← [2.13 Constraints](13-constraints.md) | Next: [2.15 Indexes & Performance →](15-indexes-and-performance.md)
+← [2.16 Constraints](16-constraints.md) | Next: [2.18 Indexes & Performance →](18-indexes-and-performance.md)

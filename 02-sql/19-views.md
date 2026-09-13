@@ -1,6 +1,6 @@
-← [2.15 Indexes & Performance](15-indexes-and-performance.md)
+← [2.18 Indexes & Performance](18-indexes-and-performance.md)
 
-# 2.16 Views
+# 2.19 Views
 
 Before any code, 3 real-world situations where the same complex query gets
 run over and over.
@@ -27,9 +27,9 @@ you use the view; nothing is duplicated or stored twice. It solves all 3
 scenarios above: write the complex query once, reuse it by name everywhere,
 and optionally hide columns nobody outside the team should see.
 
-## Step 1 — Where our data stands after Lesson 2.14
+## Step 1 — Where our data stands after Lesson 2.17
 
-After [Lesson 2.14](14-transactions.md)'s successful transactions, every
+After [Lesson 2.17](17-transactions.md)'s successful transactions, every
 customer now has at least one order:
 
 - Alice: order 1 (1798.00) + order 3 (1598.00) = **3396.00**
@@ -38,7 +38,7 @@ customer now has at least one order:
 
 ## Step 2 — Turning a query into a view
 
-Recall [Lesson 2.11](11-joins.md)'s "total spent per customer" query — it's
+Recall [Lesson 2.14](14-joins.md)'s "total spent per customer" query — it's
 exactly the kind of query you'd run over and over in a real app. Save it as a
 view instead of retyping it:
 
@@ -128,7 +128,7 @@ GROUP BY c.customer_id, c.name;
 REFRESH MATERIALIZED VIEW customer_order_summary_cached;
 ```
 
-This connects directly to [Lesson 2.15](15-indexes-and-performance.md)'s
+This connects directly to [Lesson 2.18](18-indexes-and-performance.md)'s
 theme — a materialized view is a deliberate tradeoff, trading perfect
 freshness for speed, exactly like the "denormalize on purpose, document why"
 principle from schema design.
@@ -143,4 +143,4 @@ principle from schema design.
 | Updatable views | Only works for simple, single-table views — not ones with joins/`GROUP BY` |
 
 ---
-← [2.15 Indexes & Performance](15-indexes-and-performance.md) | Next: [2.17 Table Management →](17-table-management.md)
+← [2.18 Indexes & Performance](18-indexes-and-performance.md) | Next: [2.20 Capstone →](20-capstone.md)

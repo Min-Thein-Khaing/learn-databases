@@ -15,7 +15,7 @@ erDiagram
 ```
 
 4 tables. `order_items` exists purely because SQL tables can't nest a list
-— [Lesson 2.9](../02-sql/09-normalization.md) required it, not chose it.
+— [Lesson 2.12](../02-sql/12-normalization.md) required it, not chose it.
 
 ```sql
 -- customers
@@ -30,7 +30,7 @@ erDiagram
 ```
 
 Reconstructing "order 1, with everything in it" means a `JOIN` across 3
-tables ([Lesson 2.11](../02-sql/11-joins.md)).
+tables ([Lesson 2.14](../02-sql/14-joins.md)).
 
 ## The document shape (Part 2)
 

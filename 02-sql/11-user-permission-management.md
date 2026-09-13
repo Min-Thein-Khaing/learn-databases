@@ -1,6 +1,6 @@
-← [2.18 The PostgreSQL CLI](18-postgres-cli.md)
+← [2.10 The PostgreSQL CLI](10-postgres-cli.md)
 
-# 2.19 User & Permission Management
+# 2.11 User & Permission Management
 
 Before any code — a naming clash to clear up first, since "users" means two
 very different things.
@@ -27,7 +27,7 @@ Before adding anyone, check who's already there — you can't reason about
 \du
 ```
 
-`\du` is the same meta-command [Lesson 2.18](18-postgres-cli.md) introduced —
+`\du` is the same meta-command [Lesson 2.10](10-postgres-cli.md) introduced —
 it lists every role on the server, plus a column of attributes
 (`Superuser`, `Create role`, `Create DB`, ...). On a fresh database, you'll
 likely see just one: your own superuser role (`postgres` or `root`,
@@ -133,16 +133,16 @@ of all at once:
 | `INSERT` | Add new rows |
 | `UPDATE` | Modify existing rows |
 | `DELETE` | Remove rows |
-| `TRUNCATE` | Empty the whole table at once ([Lesson 2.17](17-table-management.md)) |
+| `TRUNCATE` | Empty the whole table at once ([Lesson 2.9](09-table-management.md)) |
 | `REFERENCES` | Create a foreign key that points at this table |
 | `ALL PRIVILEGES` | Every permission above, at once — Step 3 granted this broadly |
 
 This is where **the principle of least privilege** comes in: give a role
 exactly the capabilities it needs to do its job, nothing more — the exact
-opposite of Step 3's "grant everything" — the same instinct behind
-[Lesson 2.13](13-constraints.md)'s constraints, just applied to *who* can
-act, instead of *what values* are allowed. Scaling `app_user` back down to
-what an application actually needs:
+opposite of Step 3's "grant everything." You'll meet this same instinct
+again in [Lesson 2.16](16-constraints.md)'s constraints, just applied there
+to *what values* are allowed instead of *who* can act. Scaling `app_user`
+back down to what an application actually needs:
 
 ```sql
 ALTER ROLE app_user WITH NOSUPERUSER;
@@ -252,4 +252,4 @@ application).
 | `DROP ROLE` | Deletes a role (after clearing anything it owns) |
 
 ---
-← [2.18 The PostgreSQL CLI](18-postgres-cli.md) | Next: [2.20 Capstone →](20-capstone.md)
+← [2.10 The PostgreSQL CLI](10-postgres-cli.md) | Next: [2.12 Normalization →](12-normalization.md)

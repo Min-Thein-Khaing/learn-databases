@@ -1,6 +1,6 @@
-← [2.17 Table Management](17-table-management.md)
+← [2.9 Table Management](09-table-management.md)
 
-# 2.18 The PostgreSQL CLI
+# 2.10 The PostgreSQL CLI
 
 Every lesson so far has run SQL "somehow" — in `psql`, a GUI, or wherever
 your setup put it. Let's make that explicit: `psql` is PostgreSQL's own
@@ -117,7 +117,7 @@ large.
 
 ## Step 5 — Dropping a table from the CLI
 
-[Lesson 2.17](17-table-management.md) covered `DROP TABLE` as SQL — it's
+[Lesson 2.9](09-table-management.md) covered `DROP TABLE` as SQL — it's
 identical here, `psql` is just where you're typing it:
 
 ```sql
@@ -130,7 +130,7 @@ actually landed.
 ## Step 6 — A few more meta-commands worth knowing
 
 ```
-\du          -- list roles/users on this server (Lesson 2.19 covers creating them)
+\du          -- list roles/users on this server (Lesson 2.11 covers creating them)
 \x           -- toggle "expanded display": one column per line — much easier to
                 read a wide row than psql's default side-scrolling table
 \timing      -- show how long each query took to run
@@ -158,4 +158,4 @@ in a normal terminal window otherwise.
 | `\q` | Quit |
 
 ---
-← [2.17 Table Management](17-table-management.md) | Next: [2.19 User & Permission Management →](19-user-permission-management.md)
+← [2.9 Table Management](09-table-management.md) | Next: [2.11 User & Permission Management →](11-user-permission-management.md)

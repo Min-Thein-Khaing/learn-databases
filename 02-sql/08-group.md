@@ -209,4 +209,4 @@ BY`/`LIMIT` to sort and page, functions to reshape and summarize values, and
 `GROUP BY`/`HAVING` to summarize per category.
 
 ---
-← [2.7 Functions](07-functions.md) | Next: [2.9 Normalization →](09-normalization.md)
+← [2.7 Functions](07-functions.md) | Next: [2.9 Table Management →](09-table-management.md)

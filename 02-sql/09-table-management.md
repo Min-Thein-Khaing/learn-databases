@@ -1,6 +1,6 @@
-← [2.16 Views](16-views.md)
+← [2.8 Group](08-group.md)
 
-# 2.17 Table Management
+# 2.9 Table Management
 
 [Lesson 2.2](02-your-first-database-apple-example.md) taught `CREATE TABLE`
 with one example: `products`. Real projects need many different table
@@ -36,7 +36,11 @@ INSERT INTO tasks (title, due_date, priority) VALUES
 
 ## Step 2 — A fresh domain: a small blog
 
-New domain, same skills from [Lesson 2.10](10-relationships-and-foreign-keys.md):
+A new domain, with one new wrinkle — `author_id` below points at another
+table's primary key. That's a **foreign key**, formally covered soon in
+[Lesson 2.13](13-relationships-and-foreign-keys.md); for now, just read
+`REFERENCES authors(author_id)` as "this column's value must match a real
+row over in `authors`":
 
 ```sql
 CREATE TABLE authors (
@@ -80,7 +84,7 @@ CREATE TABLE inventory (
     warehouse_id INTEGER REFERENCES warehouses(warehouse_id),
     product_id   INTEGER REFERENCES products(product_id),  -- reuses Lesson 2.2's table
     quantity     INTEGER NOT NULL CHECK (quantity >= 0),
-    PRIMARY KEY (warehouse_id, product_id)   -- composite key, from Lesson 2.13
+    PRIMARY KEY (warehouse_id, product_id)   -- a composite key: two columns, together, as the key
 );
 ```
 
@@ -93,9 +97,8 @@ INSERT INTO inventory (warehouse_id, product_id, quantity) VALUES
 
 ## Step 4 — `CREATE TABLE AS`: snapshot a query into a real table
 
-[Lesson 2.16](16-views.md)'s views stay **live** — re-run the underlying
-query every time. `CREATE TABLE ... AS` instead **freezes** a query's result
-into a brand new, independent table, as of right now:
+`CREATE TABLE ... AS` runs a `SELECT`, then **freezes** its result into a
+brand new, independent table, as of right now:
 
 ```sql
 CREATE TABLE products_snapshot_2026_q1 AS
@@ -106,6 +109,8 @@ Later changes to `products` — a price update, a new product — **never**
 touch `products_snapshot_2026_q1` again; it's a genuine copy, not a saved
 query. Useful for "what did our catalog look like at the end of Q1?"
 reporting, where you specifically want the past preserved, not the present.
+([Lesson 2.19](19-views.md) covers the opposite idea — a `VIEW`, which
+stays **live** and re-runs its query every time instead of freezing it.)
 
 ## Step 5 — Temporary tables: scratch work that cleans itself up
 
@@ -145,9 +150,10 @@ ALTER TABLE tasks DROP COLUMN owner;
 ALTER TABLE tasks RENAME TO todo_items;
 ```
 
-[Lesson 2.13](13-constraints.md) already showed `ALTER TABLE ... ADD
-CONSTRAINT` for bolting a `CHECK` onto an existing table — the same command
-family, just adding a rule instead of a column.
+The same command family also bolts a rule onto an existing table instead of
+a column — `ALTER TABLE ... ADD CONSTRAINT` — which
+[Lesson 2.16](16-constraints.md) covers properly alongside every other
+constraint type.
 
 ⚠️ Adding a column with `NOT NULL` and no `DEFAULT` fails immediately on a
 table that already has rows — Postgres has no value to backfill existing
@@ -201,16 +207,16 @@ it" has more than one meaning. Three common strategies, and their trade-offs:
 Rule of thumb: reach for `ALTER TABLE` for routine changes (new column,
 rename, new constraint). Reach for the rebuild-and-swap pattern only for
 a structural overhaul you want to verify before committing to — and always
-inside a transaction ([Lesson 2.14](14-transactions.md)) so a bad swap can
+inside a transaction ([Lesson 2.17](17-transactions.md)) so a bad swap can
 be rolled back.
 
 ## Step 9 — Recap: every table-management technique so far
 
-| Technique | Where you've seen it |
+| Technique | Where it's covered |
 |---|---|
 | Basic columns + types | [Lesson 2.2](02-your-first-database-apple-example.md) |
-| `PRIMARY KEY`, `REFERENCES`, `CHECK`, `UNIQUE`, `DEFAULT` | [Lesson 2.13](13-constraints.md) |
-| Composite `PRIMARY KEY` | [Lesson 2.10](10-relationships-and-foreign-keys.md), Step 3 above |
+| `PRIMARY KEY`, `REFERENCES`, `CHECK`, `UNIQUE`, `DEFAULT` (in depth) | [Lesson 2.16](16-constraints.md) |
+| Composite `PRIMARY KEY` (in depth) | [Lesson 2.13](13-relationships-and-foreign-keys.md); previewed in Step 3 above |
 | `IF NOT EXISTS` | Step 1 above |
 | Nullable column as a meaningful state (not just "missing data") | Step 2 above |
 | Referencing a table from a different lesson/domain | Step 3 above |
@@ -221,4 +227,4 @@ be rolled back.
 | Choosing `ALTER` vs. rebuild-and-swap | Step 8 above |
 
 ---
-← [2.16 Views](16-views.md) | Next: [2.18 The PostgreSQL CLI →](18-postgres-cli.md)
+← [2.8 Group](08-group.md) | Next: [2.10 The PostgreSQL CLI →](10-postgres-cli.md)

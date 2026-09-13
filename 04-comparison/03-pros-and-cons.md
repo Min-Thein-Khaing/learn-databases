@@ -9,7 +9,7 @@ not abstract claims.
 
 | | SQL | MongoDB |
 |---|---|---|
-| Foreign keys enforced? | Yes ([Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md)) | **No** ([Lesson 3.10](../03-mongodb/10-relationships-in-mongodb.md)) |
+| Foreign keys enforced? | Yes ([Lesson 2.13](../02-sql/13-relationships-and-foreign-keys.md)) | **No** ([Lesson 3.10](../03-mongodb/10-relationships-in-mongodb.md)) |
 | Type/shape rules enforced? | Yes, always (column types) | Only if you add `$jsonSchema` validation ([Lesson 3.13](../03-mongodb/13-schema-validation.md)) |
 | `DEFAULT` values | Server-enforced | **No equivalent** — the app must supply every value |
 | **Verdict** | Stronger guarantees, by default | Guarantees are opt-in, and some (FK) aren't available at all |
@@ -27,7 +27,7 @@ not abstract claims.
 | | SQL | MongoDB |
 |---|---|---|
 | Fetch one entity + its immediate details | `JOIN` | Often a single document read (if embedded) |
-| Aggregate across many related records | `JOIN` + `GROUP BY`, one pass ([Lesson 2.11](../02-sql/11-joins.md)) | `$lookup` + `$reduce`/`$map`, more steps ([Lesson 3.11](../03-mongodb/11-lookup-joins.md)) |
+| Aggregate across many related records | `JOIN` + `GROUP BY`, one pass ([Lesson 2.14](../02-sql/14-joins.md)) | `$lookup` + `$reduce`/`$map`, more steps ([Lesson 3.11](../03-mongodb/11-lookup-joins.md)) |
 | Recursive/hierarchical data | `WITH RECURSIVE` | `$graphLookup` — both handle it, similar effort |
 | **Verdict** | Better at cross-record questions | Better at "fetch one whole thing" questions |
 

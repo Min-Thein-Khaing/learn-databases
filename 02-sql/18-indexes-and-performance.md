@@ -1,6 +1,6 @@
-← [2.14 Transactions](14-transactions.md)
+← [2.17 Transactions](17-transactions.md)
 
-# 2.15 Indexes & Performance
+# 2.18 Indexes & Performance
 
 Every query so far has run instantly — our tables have a handful of rows.
 Real tables have millions. Before any code, 3 real-world situations where
@@ -43,13 +43,13 @@ fast as well, not just exact matches.
 
 ## Step 2 — What's already indexed, and what isn't
 
-From [Lesson 2.13](13-constraints.md): `PRIMARY KEY` and `UNIQUE` columns are
+From [Lesson 2.16](16-constraints.md): `PRIMARY KEY` and `UNIQUE` columns are
 **automatically** indexed — `products.product_id`, `customers.email`, and
 `order_items`'s composite `(order_id, product_id)` key all already have one.
 
 **Foreign key columns are *not* automatically indexed in PostgreSQL** — a
 common surprise. `orders.customer_id` and `order_items.product_id` (the
-columns we constantly `JOIN` on, back in [Lesson 2.11](11-joins.md)) have no
+columns we constantly `JOIN` on, back in [Lesson 2.14](14-joins.md)) have no
 index yet. Let's add them:
 
 ```sql
@@ -125,4 +125,4 @@ tables that are large and read often. Don't index "just in case."
 | Small tables | May correctly ignore your index — that's expected, not a bug |
 
 ---
-← [2.14 Transactions](14-transactions.md) | Next: [2.16 Views →](16-views.md)
+← [2.17 Transactions](17-transactions.md) | Next: [2.19 Views →](19-views.md)
