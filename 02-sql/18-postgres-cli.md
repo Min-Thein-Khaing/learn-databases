@@ -18,10 +18,17 @@ psql -U postgres
 ```
 
 If it runs in Docker ([Lesson 1.6](../01-fundamentals/06-run-with-docker.md)),
-`psql` lives *inside* the container — run it through `docker exec`:
+`psql` lives *inside* the container — run it through `docker exec`. The
+`-U` (user) and `-d` (database) flags have to match whatever you actually
+passed to `docker run` back in that lesson — there isn't one universal
+command, because Lesson 1.6 sets those up two different ways:
 
 ```bash
-docker exec -it my-postgres psql -U postgres
+# Matches Lesson 1.6, Step 3 (the basic `docker run`, no POSTGRES_USER set)
+docker exec -it my-postgres psql -U postgres -d my_store
+
+# Matches Lesson 1.6, Step 6 (the persistent-volume setup, POSTGRES_USER=root)
+docker exec -it my-postgres psql -U root -d my_store
 ```
 
 | Piece | Means |
@@ -29,10 +36,19 @@ docker exec -it my-postgres psql -U postgres
 | `docker exec` | Run a command inside an already-running container |
 | `-it` | Interactive + a proper terminal — needed for a prompt you can type into |
 | `my-postgres` | The container's name, from `docker run --name my-postgres ...` |
-| `psql -U postgres` | The command to run inside it: `psql`, logging in as role `postgres` |
+| `-U <role>` | Log in as this role — whatever `POSTGRES_USER` was set to (default: `postgres`) |
+| `-d <database>` | Connect to this database — whatever `POSTGRES_DB` was set to |
 
-Either way, you land on a prompt like `postgres=#` — you're now talking
+Either way, you land on a prompt like `my_store=#` — you're now talking
 directly to the database.
+
+⚠️ **`psql: error: ... FATAL: role "postgres" does not exist`** means the
+container was created with a different `POSTGRES_USER` (e.g. `root`) — the
+`postgres` role was never created in that container at all. Check the
+`-e POSTGRES_USER=...` flag (or its absence) in whichever `docker run`
+command you actually used, and `-U` that role instead. Similarly, leaving
+off `-d` tries to connect to a database named after your role (e.g. `root`)
+— which usually doesn't exist — so always pass `-d` explicitly with Docker.
 
 ## Step 2 — `psql` meta-commands vs. SQL
 
