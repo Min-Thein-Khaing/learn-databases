@@ -1,11 +1,13 @@
 ← [2.16 Views](16-views.md)
 
-# 2.17 Create Tables: More Examples
+# 2.17 Table Management
 
 [Lesson 2.2](02-your-first-database-apple-example.md) taught `CREATE TABLE`
 with one example: `products`. Real projects need many different table
-shapes. Let's practice with several more — each one highlighting a technique
-you haven't seen yet.
+shapes, and tables keep changing after they're created — new columns,
+renames, and eventually retirement. Let's practice creating several more
+shapes, then cover the rest of a table's lifecycle: altering, dropping, and
+choosing between the two.
 
 ## Step 1 — `IF NOT EXISTS`: safe to re-run
 
@@ -219,4 +221,4 @@ be rolled back.
 | Choosing `ALTER` vs. rebuild-and-swap | Step 8 above |
 
 ---
-← [2.16 Views](16-views.md) | Next: [2.18 User & Access Management →](18-user-access-management.md)
+← [2.16 Views](16-views.md) | Next: [2.18 The PostgreSQL CLI →](18-postgres-cli.md)

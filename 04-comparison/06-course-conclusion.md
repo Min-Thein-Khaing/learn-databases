@@ -11,7 +11,7 @@ line. That's the whole course. Here's the full shape of it.
 | Module | Focus | Detailed recap |
 |---|---|---|
 | **Module 1** | Fundamentals — what data is, database types, brands, setup | [1.8 Module 1 Conclusion](../01-fundamentals/08-conclusion.md) |
-| **Part 1** | SQL, with PostgreSQL — 20 lessons, a full multi-table system | [2.20 Part 1 Conclusion](../02-sql/20-conclusion.md) |
+| **Part 1** | SQL, with PostgreSQL — 21 lessons, a full multi-table system | [2.21 Part 1 Conclusion](../02-sql/21-conclusion.md) |
 | **Part 2** | NoSQL, with MongoDB — the same system, rebuilt | [3.20 Part 2 Conclusion](../03-mongodb/20-conclusion.md) |
 | **Chapter 4** | Direct comparison, pros/cons, and how to decide | This module |
 

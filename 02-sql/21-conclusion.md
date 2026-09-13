@@ -1,6 +1,6 @@
-← [2.19 Capstone](19-capstone.md)
+← [2.20 Capstone](20-capstone.md)
 
-# 2.20 Part 1 Conclusion
+# 2.21 Part 1 Conclusion
 
 Part 1 is done. Let's connect everything it covered, and confirm you're
 genuinely ready for Part 2.
@@ -25,9 +25,10 @@ genuinely ready for Part 2.
 | [2.14 Transactions](14-transactions.md) | All-or-nothing guarantees across multiple statements |
 | [2.15 Indexes & Performance](15-indexes-and-performance.md) | Why queries stay fast (or don't) at real scale |
 | [2.16 Views](16-views.md) | Saving a query under a name, reused like a table |
-| [2.17 Create Tables: More Examples](17-create-tables-examples.md) | More `CREATE TABLE` patterns — snapshots, temp tables, cross-lesson references |
-| [2.18 User & Access Management](18-user-access-management.md) | Roles, `GRANT`/`REVOKE`, and least privilege |
-| [2.19 Capstone](19-capstone.md) | Every skill above, used together on one real feature |
+| [2.17 Table Management](17-table-management.md) | More `CREATE TABLE` patterns, plus `ALTER`/`DROP TABLE` and evolving a schema safely |
+| [2.18 The PostgreSQL CLI](18-postgres-cli.md) | Connecting with `psql`, listing databases/tables, and other everyday meta-commands |
+| [2.19 User & Permission Management](19-user-permission-management.md) | Roles, `GRANT`/`REVOKE`, and least privilege |
+| [2.20 Capstone](20-capstone.md) | Every skill above, used together on one real feature |
 
 ## The one idea to carry forward
 
@@ -57,4 +58,4 @@ embedding instead of joining, and a schema that bends instead of one that's
 enforced up front. That contrast is exactly the point.
 
 ---
-← [2.19 Capstone](19-capstone.md) | Next: [3.1 What Is MongoDB? →](../03-mongodb/01-what-is-mongodb.md)
+← [2.20 Capstone](20-capstone.md) | Next: [3.1 What Is MongoDB? →](../03-mongodb/01-what-is-mongodb.md)

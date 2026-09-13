@@ -1,6 +1,6 @@
-← [2.18 User & Access Management](18-user-access-management.md)
+← [2.19 User & Permission Management](19-user-permission-management.md)
 
-# 2.19 Capstone: Product Reviews
+# 2.20 Capstone: Product Reviews
 
 One last feature, built end to end with everything from Part 1: the Apple
 Store wants **product reviews**. Let's design, build, and query it —
@@ -148,8 +148,8 @@ compare.
 
 ## Step 8 — One last access-control touch (User Management)
 
-Following [Lesson 2.18](18-user-access-management.md), extend `app_user`'s
-permissions to cover the new table:
+Following [Lesson 2.19](19-user-permission-management.md), extend
+`app_user`'s permissions to cover the new table:
 
 ```sql
 GRANT SELECT, INSERT ON reviews TO app_user;   -- no UPDATE/DELETE — reviews are immutable once posted
@@ -159,4 +159,4 @@ That's every skill from Part 1, used together on one real feature — design,
 build, secure, and query it, end to end.
 
 ---
-← [2.18 User & Access Management](18-user-access-management.md) | Next: [2.20 Part 1 Conclusion →](20-conclusion.md)
+← [2.19 User & Permission Management](19-user-permission-management.md) | Next: [2.21 Part 1 Conclusion →](21-conclusion.md)
