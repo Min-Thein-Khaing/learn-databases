@@ -13,8 +13,10 @@ very different things.
 
 So far, every example in this course has run as the all-powerful `postgres`
 (or `root`) superuser. Real applications never should — this lesson walks
-through the full cycle: see who has access, add someone, give them exactly
-what they need, understand what you just gave them, and take it away again.
+through the full cycle: see who has access, add someone, hand them
+*everything*, understand exactly what that gave away (and what each smaller
+piece of it means on its own), scale it back down, and take it all away
+again.
 
 ## Step 1 — See who already has access
 
@@ -57,29 +59,73 @@ CREATE USER app_user WITH PASSWORD 'change_me_123';   -- LOGIN is implied
 Run `\du` again — `app_user` is now in the list. But try connecting as it
 and querying `products`, and you'll get `permission denied for table
 products`. Creating a role only grants the ability to *log in* — every
-permission on every table still has to be handed out explicitly, one
-`GRANT` at a time.
+permission on every table still has to be handed out explicitly.
 
-## Step 3 — Give permission
+## Step 3 — Give permission: all of it, on everything
 
-```sql
-GRANT SELECT, INSERT, UPDATE ON products, orders, order_items TO app_user;
-```
-
-`app_user` can now read, insert, and update rows in exactly those 3 tables —
-notice **not** `DELETE`, and **not** `customers`, `reviews`, or any other
-table. That's deliberate, not an oversight — see Step 4.
-
-To hand out the same permission across every table at once, rather than
-naming them one by one:
+Let's start as wide as PostgreSQL allows, then explain and scale back from
+there. Every permission, on every table, in every database — step by step:
 
 ```sql
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO app_user;
+-- 1. Every permission, on every table that exists right now, in one schema
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO app_user;
+
+-- 2. Every permission on sequences too — a SERIAL primary key needs this for
+--    INSERT to work, and it's easy to forget since it's a separate object
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO app_user;
+
+-- 3. Cover tables created LATER too — step 1 only covers what exists today
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO app_user;
+
+-- 4. Every permission on the database itself (connect, create schemas/tables, temp tables)
+GRANT ALL PRIVILEGES ON DATABASE apple_store TO app_user;
+
+-- 5. The widest possible grant: bypass permission checks entirely, on every database
+ALTER ROLE app_user WITH SUPERUSER;
 ```
 
-## Step 4 — Explain permission: what you just gave away
+`app_user` can now do absolutely anything, anywhere on this server —
+identical to `postgres`/`root` itself. Step 4 explains exactly what each of
+those five statements actually gave away, and why real applications almost
+never want to stop here.
 
-Each keyword in a `GRANT` maps to one specific capability on a table:
+## Step 4 — Explain permission
+
+### First: what "all" actually means
+
+- **`GRANT ALL PRIVILEGES ON ALL TABLES ...`** is shorthand for every
+  individual table permission below (`SELECT, INSERT, UPDATE, DELETE,
+  TRUNCATE, REFERENCES`, plus `TRIGGER`) — all at once, for every table
+  that currently exists in that schema.
+- **`ALL SEQUENCES`** matters because every `SERIAL`/`IDENTITY` primary key
+  ([Lesson 2.2](02-your-first-database-apple-example.md)) is backed by its
+  own sequence object. Grant `INSERT` on the table but forget this, and
+  inserts still fail — the role can't advance the sequence that generates
+  the id.
+- **`ALTER DEFAULT PRIVILEGES`** doesn't grant anything on its own — it's a
+  standing rule: *"whenever a new table shows up in this schema from now
+  on, auto-grant this too."* Without it, a table created next week starts
+  back at zero permissions for `app_user`, even though step 1 covered
+  everything else.
+- **`GRANT ALL PRIVILEGES ON DATABASE`** is smaller than it sounds — it
+  covers connecting to the database and creating schemas/tables/temp
+  tables inside it. It does **not** by itself grant access to the tables
+  already in it — that's the separate `ALL TABLES` grant above.
+- **`ALTER ROLE ... SUPERUSER`** is the real "everything, everywhere" —
+  a superuser bypasses every `GRANT`/`REVOKE` on the whole server, across
+  every database, no exceptions. This is what `postgres`/`root` already is.
+
+⚠️ Reach for `SUPERUSER` (or even schema-wide `ALL PRIVILEGES`) sparingly.
+One leaked password or one SQL-injection bug in that role's application,
+and whoever exploits it now has *everything*, not "everything in 3
+tables." Save it for a human administrator or a genuinely trusted internal
+tool — a migration script, a backup job — never for a public-facing app's
+own database user.
+
+### Then: the individual privileges that make it up
+
+Each keyword below is one specific capability, grantable on its own instead
+of all at once:
 
 | Permission | Lets the role... |
 |---|---|
@@ -89,16 +135,25 @@ Each keyword in a `GRANT` maps to one specific capability on a table:
 | `DELETE` | Remove rows |
 | `TRUNCATE` | Empty the whole table at once ([Lesson 2.17](17-table-management.md)) |
 | `REFERENCES` | Create a foreign key that points at this table |
-| `ALL PRIVILEGES` | Every permission above, at once |
+| `ALL PRIVILEGES` | Every permission above, at once — Step 3 granted this broadly |
 
-Granting only `SELECT, INSERT, UPDATE` above (and leaving out `DELETE`) is
-the **principle of least privilege** in action: give a role exactly the
-capabilities it needs to do its job, nothing more — the same instinct
-behind [Lesson 2.13](13-constraints.md)'s constraints, just applied to *who*
-can act, instead of *what values* are allowed.
+This is where **the principle of least privilege** comes in: give a role
+exactly the capabilities it needs to do its job, nothing more — the exact
+opposite of Step 3's "grant everything" — the same instinct behind
+[Lesson 2.13](13-constraints.md)'s constraints, just applied to *who* can
+act, instead of *what values* are allowed. Scaling `app_user` back down to
+what an application actually needs:
 
-`REVOKE` is the mirror image — it takes one permission back without
-touching the others:
+```sql
+ALTER ROLE app_user WITH NOSUPERUSER;
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM app_user;
+GRANT SELECT, INSERT, UPDATE ON products, orders, order_items TO app_user;
+```
+
+Notice what's missing: **not** `DELETE`, and **not** `customers`,
+`reviews`, or any other table — deliberate, not an oversight.
+
+`REVOKE` also works one permission at a time, without touching the rest:
 
 ```sql
 REVOKE UPDATE ON products FROM app_user;
@@ -156,7 +211,9 @@ Confirm the removal (or lockout) the same way you started — `\du` again.
 
 ## Step 6 — A realistic role setup for our schema
 
-Pulling all five steps together for the actual `apple_store` database from
+Step 3 showed the widest possible grant; real applications look like Step
+4's scaled-back version instead. Pulling that together for the actual
+`apple_store` database from
 [Lesson 2.2](02-your-first-database-apple-example.md):
 
 ```sql
@@ -183,6 +240,10 @@ application).
 |---|---|
 | `\du` / `SELECT * FROM pg_roles` | Lists every role that currently exists |
 | `CREATE ROLE` / `CREATE USER` | Creates a new database login identity |
+| `GRANT ALL PRIVILEGES ON ALL TABLES/SEQUENCES IN SCHEMA ...` | Every permission, on every existing table/sequence in a schema |
+| `ALTER DEFAULT PRIVILEGES ... GRANT ALL ON TABLES ...` | Auto-grants that same access to tables created *later* |
+| `GRANT ALL PRIVILEGES ON DATABASE ...` | Every permission on the database itself (connect, create inside it) |
+| `ALTER ROLE ... SUPERUSER` / `NOSUPERUSER` | Bypasses (or restores) all permission checks, on every database |
 | `GRANT ... ON ... TO ...` | Gives a specific permission on specific tables |
 | `REVOKE ... ON ... FROM ...` | Takes a permission back |
 | `GRANT role TO role` | One role inherits another's permissions (group membership) |
