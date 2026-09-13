@@ -36,21 +36,25 @@ SELECT COUNT(*) FROM products;
 ```
 | count |
 |---|
-| 8 |
+| 53 |
 
 ```sql
 SELECT SUM(stock) AS total_stock, AVG(price) AS avg_price FROM products;
 ```
 | total_stock | avg_price |
 |---|---|
-| 3050 | 972.775000 |
+| 29560 | 802.796038 |
 
 ```sql
 SELECT MIN(price) AS cheapest, MAX(price) AS priciest FROM products;
 ```
 | cheapest | priciest |
 |---|---|
-| 549.00 | 1799.10 |
+| 19.00 | 6999.00 |
+
+(`MIN` ties between the 20W USB-C Power Adapter and the USB-C to Lightning
+Cable, both 19.00 — `MIN`/`MAX` just return the value, not which row it came
+from, so a tie is invisible here.)
 
 | Function | Does |
 |---|---|
@@ -73,7 +77,7 @@ SELECT ROUND(AVG(price), 2) AS avg_price FROM products;
 ```
 | avg_price |
 |---|
-| 972.78 |
+| 802.80 |
 
 `ROUND(value, decimal_places)` rounds to however many decimal places you ask
 for.

@@ -119,7 +119,90 @@ connection, and PostgreSQL drops it automatically. Handy for a multi-step
 script's intermediate results, without leaving cleanup tables behind in your
 real schema.
 
-## Step 6 — Recap: every `CREATE TABLE` technique so far
+## Step 6 — `ALTER TABLE`: updating a table's structure
+
+`CREATE TABLE` only gets you the starting shape. Real tables change over
+time — a new feature needs a new column, a column gets renamed, a type
+turns out to be wrong. `ALTER TABLE` edits an existing table **in place**,
+without touching the rows already in it:
+
+```sql
+-- Add a column (existing rows get the DEFAULT, or NULL if you don't give one)
+ALTER TABLE tasks ADD COLUMN assigned_to TEXT;
+
+-- Rename a column
+ALTER TABLE tasks RENAME COLUMN assigned_to TO owner;
+
+-- Change a column's type
+ALTER TABLE tasks ALTER COLUMN owner TYPE VARCHAR(100);
+
+-- Drop a column entirely — the data in it is gone, permanently
+ALTER TABLE tasks DROP COLUMN owner;
+
+-- Rename the whole table
+ALTER TABLE tasks RENAME TO todo_items;
+```
+
+[Lesson 2.13](13-constraints.md) already showed `ALTER TABLE ... ADD
+CONSTRAINT` for bolting a `CHECK` onto an existing table — the same command
+family, just adding a rule instead of a column.
+
+⚠️ Adding a column with `NOT NULL` and no `DEFAULT` fails immediately on a
+table that already has rows — Postgres has no value to backfill existing
+rows with. Give it a `DEFAULT`, or add the column first and fill it in with
+an `UPDATE` before adding the `NOT NULL` constraint separately.
+
+## Step 7 — `DROP TABLE` and `TRUNCATE`: deleting tables and their data
+
+Three commands remove data, but at very different scopes:
+
+```sql
+-- Remove specific rows, structure stays (this is DML — see Lesson 2.3)
+DELETE FROM tasks WHERE is_done = TRUE;
+
+-- Remove ALL rows, structure stays — faster than DELETE, resets any SERIAL counter
+TRUNCATE TABLE tasks;
+
+-- Remove the table itself: structure AND data, gone
+DROP TABLE IF EXISTS tasks;
+```
+
+`IF EXISTS` on `DROP TABLE` mirrors `IF NOT EXISTS` from Step 1 — safe to
+re-run a teardown script without erroring if the table's already gone.
+
+If another table references this one with `REFERENCES` (like `inventory`
+references `products` in Step 3), a plain `DROP TABLE` refuses to run —
+PostgreSQL won't silently break a foreign key. Add `CASCADE` to drop the
+dependent data too, or `RESTRICT` (the default) to keep that safety net:
+
+```sql
+DROP TABLE warehouses CASCADE;   -- also drops rows/constraints in inventory that depend on it
+```
+
+| Command | Removes | Structure survives? | Rollback in a transaction? | Resets `SERIAL`? |
+|---|---|---|---|---|
+| `DELETE ... WHERE` | Matching rows | Yes | Yes | No |
+| `TRUNCATE` | All rows | Yes | Yes | Yes |
+| `DROP TABLE` | Everything — table, data, indexes | No | Yes | N/A — table's gone |
+
+## Step 8 — Pros and cons: evolving a table in place vs. rebuilding it
+
+Once a table has real data and other tables depending on it, "just change
+it" has more than one meaning. Three common strategies, and their trade-offs:
+
+| Approach | Pros | Cons |
+|---|---|---|
+| `ALTER TABLE` in place (Step 6) | Data, foreign keys, and permissions stay intact; simplest to write | On a huge table, some alterations (e.g. adding a `NOT NULL` column with no default, pre-Postgres 11) can lock the table and rewrite every row |
+| `DROP TABLE` + `CREATE TABLE` from scratch | Clean slate, no leftover legacy columns or constraints | **All data is lost** unless you exported it first; every foreign key pointing at it breaks until recreated |
+| `CREATE TABLE ... AS` a new table, then swap names (Step 4's technique) | Old table stays untouched and queryable until the swap; easy to abandon if something looks wrong | Temporarily doubles storage; dependent views/foreign keys need to be pointed at the new table manually |
+
+Rule of thumb: reach for `ALTER TABLE` for routine changes (new column,
+rename, new constraint). Reach for the rebuild-and-swap pattern only for
+a structural overhaul you want to verify before committing to — and always
+inside a transaction ([Lesson 2.14](14-transactions.md)) so a bad swap can
+be rolled back.
+
+## Step 9 — Recap: every table-management technique so far
 
 | Technique | Where you've seen it |
 |---|---|
@@ -131,6 +214,9 @@ real schema.
 | Referencing a table from a different lesson/domain | Step 3 above |
 | `CREATE TABLE ... AS` (snapshot, not live) | Step 4 above |
 | `CREATE TEMP TABLE` (session-scoped) | Step 5 above |
+| `ALTER TABLE` — add/rename/retype/drop a column, rename a table | Step 6 above |
+| `DROP TABLE` / `TRUNCATE` — deleting tables and data, with `CASCADE` / `IF EXISTS` | Step 7 above |
+| Choosing `ALTER` vs. rebuild-and-swap | Step 8 above |
 
 ---
 ← [2.16 Views](16-views.md) | Next: [2.18 User & Access Management →](18-user-access-management.md)
