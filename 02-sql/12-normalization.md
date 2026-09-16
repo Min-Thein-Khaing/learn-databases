@@ -2,142 +2,255 @@
 
 # 2.12 Normalization
 
-[Lesson 2.9](09-table-management.md) practiced creating several tables, but
-each one stood on its own — nothing forced `authors` and `posts`, say, to
-agree with each other. Real systems need tables that are *deliberately*
-split apart from what would otherwise be one flat, repetitive table. Before
-any `CREATE TABLE`, 3 real-world situations where a single flat table
-breaks down.
+Imagine Alice buys an iPhone and AirPods from our Apple Store. A few days
+later, she buys an iPad and a Mac Mini. Where should we store her email:
+beside every item she bought, beside every order, or once in her customer record?
 
-## 3 real-world scenarios
+That is the kind of question **normalization** helps us answer.
 
-**1. A shop's** flat order spreadsheet repeats a customer's name and email on
-every single line item they've ever ordered — change that customer's email,
-and you must find and update every one of those repeated rows.
+## What is normalization?
 
-**2. A hospital's** flat patient chart repeats each doctor's phone number and
-office number on every visit record — if a doctor changes offices, that
-detail needs updating in hundreds of old visit rows, not just one place.
+**Normalization means organizing data into related tables so that each
+fact is stored with the thing it describes.**
 
-**3. A university's** flat enrollment sheet repeats a course's credit-hours
-and department on every single student row enrolled in it — a course
-correction (say, going from 3 to 4 credit hours) means hunting down and
-fixing every student's row for that course.
+| Fact | What does it describe? | Where should it live? |
+|---|---|---|
+| Alice's current email | A customer | `customers` |
+| The date order 1 was placed | An order | `orders` |
+| The name of product 7 | A product | `products` |
+| How many of product 7 were bought in order 1 | A product within a particular order | `order_items` |
 
-## Why this breaks down
+The tables connect through IDs. An order stores `customer_id` so we can
+find its customer without copying their name, email, and city into every order.
 
-All 3 scenarios share one root cause: the same fact (a customer's email, a
-doctor's office, a course's credit hours) is copied across many rows instead
-of living in exactly one place. **Normalization** is the process of
-restructuring tables to fix exactly this. Let's work through scenario 1 — the
-shop — in full detail.
+## Why do we need it?
 
-## Step 1 — Start with one flat, "obvious" table
+### One big table is easy to start with
 
-Imagine tracking Apple Store orders the simplest possible way — one row per
-purchased item, everything in a single table:
+Suppose we record one row per purchased product:
 
-| order_id | customer_name | customer_email | customer_city | product_name | product_price | quantity | order_date |
-|---|---|---|---|---|---|---|---|
-| 1 | Alice Chen | alice@mail.com | New York | iPhone 17 Pro | 1249.00 | 1 | 2026-03-01 |
-| 1 | Alice Chen | alice@mail.com | New York | AirPods Max | 549.00 | 1 | 2026-03-01 |
-| 2 | Bob Diaz | bob@mail.com | Los Angeles | MacBook Air | 989.10 | 1 | 2026-03-02 |
-| 3 | Alice Chen | alice@mail.com | New York | iPad Pro | 999.00 | 1 | 2026-03-05 |
-| 3 | Alice Chen | alice@mail.com | New York | Mac Mini | 599.00 | 1 | 2026-03-05 |
+| order_id | customer_name | customer_email | customer_city | product_name | quantity | order_date |
+|---|---|---|---|---|---|---|
+| 1 | Alice Chen | alice@mail.com | New York | iPhone 17 Pro | 1 | 2026-03-01 |
+| 1 | Alice Chen | alice@mail.com | New York | AirPods Max | 1 | 2026-03-01 |
+| 2 | Bob Diaz | bob@mail.com | Los Angeles | MacBook Air | 1 | 2026-03-02 |
+| 3 | Alice Chen | alice@mail.com | New York | iPad Pro | 1 | 2026-03-05 |
+| 3 | Alice Chen | alice@mail.com | New York | Mac Mini | 1 | 2026-03-05 |
 
-Looks reasonable — but Alice's name, email, and city are repeated **4 times**.
-That repetition is about to cause real problems.
+Alice's contact details appear **four times**. The date of order 1 appears
+twice because it contains two products.
 
-## Step 2 — The 3 anomalies this causes
+### Three ordinary actions expose the problem
 
-1. **Update anomaly** — Alice changes her email. You now must update it in
-   4 different rows. Miss even one, and her record is inconsistent — some
-   rows say her new email, one still says the old one.
-2. **Insertion anomaly** — Carla wants an account, but hasn't ordered
-   anything yet. There's no row to put her in — this table only has room for
-   customers *with* an order.
-3. **Deletion anomaly** — Delete order 2 (Bob's only order), and every
-   trace of Bob as a customer — and of MacBook Air's price, in this flat
-   design — disappears with it.
+| Action | What goes wrong? | Name for the problem |
+|---|---|---|
+| Alice changes her email | Update four rows. Miss one, and we have conflicting emails for Alice. | **Update anomaly** |
+| Carla registers without placing an order | We cannot record her without inventing an order or leaving the purchase fields empty. | **Insertion anomaly** |
+| We remove Bob's only order | We also lose his customer details because they existed only in that order's row. | **Deletion anomaly** |
 
-Normalization is the process of restructuring tables specifically to
-eliminate these three problems.
+An **anomaly** here means an unwanted side effect of changing data.
+Customer facts and purchase facts are tied together when they should be
+able to exist independently.
 
-## Step 3 — First Normal Form (1NF): atomic values only
+## How do we normalize it?
 
-**Rule**: every column holds one indivisible value — no comma-separated lists.
+We will improve the design in three stages, called **normal forms**:
+1NF, 2NF, and 3NF. Each stage builds on the previous one.
 
+### Step 1 — 1NF: give each purchased product its own row
+
+#### ❌ Wrong example — multiple products in one cell
+
+Before using our flat table, we might have tried putting the whole basket
+into a single cell:
+
+| order_id | products | quantities |
+|---|---|---|
+| 1 | iPhone 17 Pro, AirPods Max | 1, 1 |
+
+Changing only the AirPods quantity means editing a list and keeping its
+positions aligned with a second list. Searching for AirPods orders also
+requires looking inside the text.
+
+#### ✅ Right example — one row per purchased product
+
+For this relational design, use **one value per cell and one row per
+ordered product**, rather than lists or columns such as `product_1`,
+`product_2`, and `product_3`:
+
+| order_id | product_id | product_name | quantity |
+|---|---|---|---|
+| 1 | 1 | iPhone 17 Pro | 1 |
+| 1 | 7 | AirPods Max | 1 |
+
+**Why this works:** to change the AirPods quantity, update only the row
+for order 1 and product 7. There are no text lists to split or keep aligned.
+This fixes 1NF; the product name will move to its own table in Step 2.
+
+Use product IDs because names can change. In this course, each product
+appears at most once within an order; buying two means `quantity = 2`.
+So **`(order_id, product_id)` together identify one line item**.
+This pair is a **composite key**:
+
+- `order_id` alone is not enough: order 1 has two products.
+- `product_id` alone is not enough: product 7 can appear in many orders.
+- The pair `(1, 7)` identifies the AirPods line in order 1.
+
+Our original flat table already has one row per product. It still repeats
+customer details, so reaching 1NF is only the first step.
+
+### Step 2 — 2NF: keep facts that need the whole key together
+
+#### ❌ Wrong example — order facts repeated on item rows
+
+Here are the two items from order 1, with the order date copied onto both:
+
+| order_id | product_id | order_date | product_name | quantity | unit_price |
+|---|---|---|---|---|---|
+| 1 | 1 | 2026-03-01 | iPhone 17 Pro | 1 | 1249.00 |
+| 1 | 7 | 2026-03-01 | AirPods Max | 1 | 549.00 |
+
+**What breaks:** suppose the date was entered incorrectly. Correcting only
+the first row to March 2 leaves order 1 with two different dates. Also,
+renaming AirPods Max would require finding every order row containing it.
+
+Ask: **does this fact describe the order, the product, or their combination?**
+
+Give our flat table `customer_id` and `product_id` columns. Also distinguish
+the product's current catalog price from the price charged for a purchase:
+
+| Fact | What identifies it? | Why? |
+|---|---|---|
+| Order date and customer | `order_id` | Order 1 has the same date and customer for all its products. |
+| Product name and current catalog price | `product_id` | Product 7 has one current catalog entry, regardless of the order. |
+| Quantity and price charged (`unit_price`) | `(order_id, product_id)` | These describe a particular product within a particular purchase. |
+
+When one value determines another, we call that a **dependency**.
+Knowing the order ID, for example, tells us the order's date.
+
+The date depends on only **part** of our composite key: `order_id`.
+That is a **partial dependency**. The product name also depends on only
+part of the key: `product_id`.
+
+**2NF requires 1NF, plus no non-key fact depending on only part of a
+candidate key** (a minimal set of columns that uniquely identifies a row).
+Here, the key we need to examine is `(order_id, product_id)`.
+
+#### ✅ Right example — separate order, product, and item facts
+
+For the same two purchased items, store the data like this. Customer
+details are omitted here so we can focus on the order date and product name;
+Step 3 handles those customer details.
+
+**`orders`:**
+
+| order_id | customer_id | order_date |
+|---|---|---|
+| 1 | 1 | 2026-03-01 |
+
+**`products` — the two relevant catalog entries:**
+
+| product_id | name | price |
+|---|---|---|
+| 1 | iPhone 17 Pro | 1249.00 |
+| 7 | AirPods Max | 549.00 |
+
+**`order_items`:**
+
+| order_id | product_id | quantity | unit_price |
+|---|---|---|---|
+| 1 | 1 | 1 | 1249.00 |
+| 1 | 7 | 1 | 549.00 |
+
+**Why this works:** correcting the date changes one order row. Renaming
+AirPods Max changes one product row. Neither change requires editing the
+line items.
+
+Including the customer details we still need to separate, our tables at
+this stage are:
+
+| Table | Columns at this stage | One row represents… |
+|---|---|---|
+| `orders` | `order_id`, `order_date`, `customer_id`, customer name, email, city | One order |
+| `products` | `product_id`, `name`, `price` | One catalog product |
+| `order_items` | `order_id`, `product_id`, `quantity`, `unit_price` | One product purchased in one order |
+
+Now order 1's date is stored once, and product 7's name is stored once.
+The line item keeps the quantity and price charged because those belong to
+that particular purchase.
+
+But Alice still has two orders. Her contact details are still copied into
+both order rows. We need one more step.
+
+### Step 3 — 3NF: move customer facts to the customer
+
+#### ❌ Wrong example — customer details copied into every order
+
+After Step 2, `orders` looks like this:
+
+| order_id | order_date | customer_id | customer_name | customer_email | customer_city |
+|---|---|---|---|---|---|
+| 1 | 2026-03-01 | 1 | Alice Chen | alice@mail.com | New York |
+| 2 | 2026-03-02 | 2 | Bob Diaz | bob@mail.com | Los Angeles |
+| 3 | 2026-03-05 | 1 | Alice Chen | alice@mail.com | New York |
+
+**What breaks:** Alice changes her email to `alice.chen@mail.com`. If we
+update order 1 but forget order 3, the same customer has two conflicting
+current email addresses. Her next order would introduce another copy.
+
+**If Alice changes her email, did anything about either order change?**
+
+No. Her current email describes Alice. We reach it through another fact
+in the order row:
+
+```text
+order_id → customer_id → customer name, email, city
 ```
-❌ Violates 1NF:
-| order_id | customer_name | products                        |
-|----------|----------------|---------------------------------|
-| 1        | Alice Chen     | iPhone 17 Pro, AirPods Max       |
-```
 
-```
-✅ Satisfies 1NF — one row per product (this is the table from Step 1):
-| order_id | customer_name | product_name   |
-|----------|----------------|----------------|
-| 1        | Alice Chen     | iPhone 17 Pro  |
-| 1        | Alice Chen     | AirPods Max    |
-```
+That chain is called a **transitive dependency**. In this design, 3NF
+removes it by moving the customer details into `customers` and keeping
+only `customer_id` in `orders`.
 
-Our Step 1 table already satisfies 1NF — no repeating groups. The redundancy
-problem is still there, though — 1NF alone doesn't fix anomalies 1–3. That
-takes the next two forms.
+#### ✅ Right example — store Alice once and reference her ID
 
-## Step 4 — Second Normal Form (2NF): no partial dependency
+**`customers` — one row per customer:**
 
-This rule only matters when a table's key is **composite** (more than one
-column). Here, a line item is really identified by `(order_id, product_name)`
-together. Ask: *does every other column depend on the **whole** key, or just
-part of it?*
+| customer_id | name | email | city |
+|---|---|---|---|
+| 1 | Alice Chen | alice@mail.com | New York |
+| 2 | Bob Diaz | bob@mail.com | Los Angeles |
+| 3 | Carla Ruiz | carla@mail.com | Chicago |
 
-- `customer_name`, `customer_email`, `customer_city`, `order_date` depend only
-  on `order_id` — not on `product_name` at all. **Partial dependency.**
-- `product_price` depends only on `product_name` — not on `order_id` at all.
-  **Partial dependency.**
+**`orders` — one row per order:**
 
-**Fix**: pull each partially-dependent group into its own table, keyed by
-just the part of the key it actually depends on:
+| order_id | customer_id | order_date |
+|---|---|---|
+| 1 | 1 | 2026-03-01 |
+| 2 | 2 | 2026-03-02 |
+| 3 | 1 | 2026-03-05 |
 
-```mermaid
-erDiagram
-    ORDERS ||--o{ ORDER_ITEMS : contains
-    PRODUCTS ||--o{ ORDER_ITEMS : "sold as"
-    ORDERS {
-        int order_id PK
-        string customer_name
-        string customer_email
-        string customer_city
-        date order_date
-    }
-    ORDER_ITEMS {
-        int order_id FK
-        int product_id FK
-        int quantity
-    }
-    PRODUCTS {
-        int product_id PK
-        string name
-        decimal price
-    }
-```
+Alice's email now appears once. Her ID appears twice in `orders` because
+she placed two orders. **Repeating an ID to connect records is expected**:
+we can change her email without changing those connections.
 
-`product_price` now lives once, on `products` (which we already built in
-[Lesson 2.2](02-your-first-database-apple-example.md)) — not copied onto
-every line item.
+**Why this works:** change Alice's email in customer row 1 once. Both
+orders still lead to that same customer record, so both find the updated
+email. Carla can also have an account without an order.
 
-## Step 5 — Third Normal Form (3NF): no transitive dependency
+### Step 4 — Check the complete design
 
-Look at `orders` from Step 4: `customer_name`, `customer_email`, and
-`customer_city` all still depend on **which customer** placed the order —
-not directly on `order_id` itself. This is a **transitive dependency**:
-`order_id → customer_id → customer_name/email/city`. If Alice places a 4th
-order, her name/email/city get copied in yet again.
+Keep the `products` table from [Lesson 2.2](02-your-first-database-apple-example.md).
+Our five purchases belong in `order_items`:
 
-**Fix**: pull customer details into their own table too, and reference it by
-ID:
+| order_id | product_id | quantity | unit_price |
+|---|---|---|---|
+| 1 | 1 | 1 | 1249.00 |
+| 1 | 7 | 1 | 549.00 |
+| 2 | 2 | 1 | 989.10 |
+| 3 | 5 | 1 | 999.00 |
+| 3 | 10 | 1 | 599.00 |
+
+These four tables connect like this:
 
 ```mermaid
 erDiagram
@@ -156,9 +269,10 @@ erDiagram
         date order_date
     }
     ORDER_ITEMS {
-        int order_id FK
-        int product_id FK
+        int order_id PK, FK
+        int product_id PK, FK
         int quantity
+        decimal unit_price
     }
     PRODUCTS {
         int product_id PK
@@ -167,29 +281,72 @@ erDiagram
     }
 ```
 
-**Rule of thumb for 3NF, worth memorizing**: every non-key column should
-depend on *"the key, the whole key, and nothing but the key."*
+`PK` means primary key; `FK` means foreign key, a reference to another
+table. In `order_items`, the two marked columns form one composite primary
+key. The diagram shows only the product columns relevant to this lesson.
 
-## Step 6 — Checking our anomalies are actually gone
+To read order 1, follow its `customer_id` to Alice, find its two line
+items, and follow their `product_id` values to the product names.
+We have kept the information and changed where it lives. A `JOIN` combines
+it again for a report; [Lesson 2.14](14-joins.md) teaches that.
 
-- **Update anomaly** ✅ fixed — Alice's email lives in exactly one row, in
-  `customers`. Change it once.
-- **Insertion anomaly** ✅ fixed — Carla can be added to `customers` with zero
-  rows in `orders` at all.
-- **Deletion anomaly** ✅ fixed — deleting an order from `orders` doesn't
-  touch `customers` or `products`; each fact lives in exactly one place.
+### Why keep `unit_price` when products already have `price`?
 
-## Step 7 — Recap
+They describe **different facts**:
 
-| Form | Rule | Fixes |
+- `products.price`: what the product costs in the catalog now.
+- `order_items.unit_price`: what one unit cost in this particular purchase.
+
+Suppose AirPods Max cost 549.00 when Alice bought them, and later the store
+changes the catalog price to 499.00. Her old order must still show 549.00.
+Using today's catalog price would incorrectly change her purchase history.
+
+The values can initially match without being redundant facts. Keeping the
+purchase price is compatible with normalization: it belongs to the line item.
+Similarly, customer city here is a **current profile detail**; a shipping
+address recorded for an old order would be a separate historical fact.
+
+## Did we solve the original problems?
+
+| Action | With the normalized design |
+|---|---|
+| Alice changes her email | Update one row in `customers`; both orders still reference her. |
+| Carla registers without buying anything | Insert one row into `customers`; no order is needed. |
+| Bob's only order is removed | Remove its line items and the order; Bob's customer record and the products remain. |
+
+The design lets us change these facts independently. Foreign keys, covered
+in the next lesson, enforce that references point to real records.
+
+## Quick practice: where does each fact belong?
+
+1. Alice changes her current city to Boston.
+2. Order 3 was placed on March 5.
+3. The store renames product 7.
+4. A customer buys two units of product 7 in one order.
+
+<details>
+<summary>Show answer</summary>
+
+1. `customers.city` — a fact about Alice.
+2. `orders.order_date` — a fact about the order.
+3. `products.name` — a fact about the product.
+4. `order_items.quantity` — a fact about that product within that order.
+
+</details>
+
+## Recap
+
+| Form | Question to ask in this example | Change we made |
 |---|---|---|
-| 1NF | Every column is atomic — no comma-separated lists | Repeating groups |
-| 2NF | Every column depends on the *whole* key, not part of it | Partial dependency |
-| 3NF | Every column depends *only* on the key, not on another non-key column | Transitive dependency |
+| 1NF | Are we packing multiple purchased products into one cell? | Give each ordered product its own row. |
+| 2NF | Does this fact need the whole `(order_id, product_id)` key? | Move order facts to `orders` and product facts to `products`. |
+| 3NF | Are we keeping customer details inside an order? | Move those details to `customers` and reference the customer by ID. |
 
-We now have 4 tables instead of 1: `customers`, `orders`, `order_items`, and
-the `products` table we already built. [Lesson 2.13](13-relationships-and-foreign-keys.md)
-turns this ER diagram into real `CREATE TABLE` statements with foreign keys.
+When designing a table, first finish this sentence: **“One row represents…”**
+Then check whether each column describes that thing.
+
+[Lesson 2.13](13-relationships-and-foreign-keys.md) turns this design into
+real `CREATE TABLE` statements and connects the tables with foreign keys.
 
 ---
 ← [2.11 User & Permission Management](11-user-permission-management.md) | Next: [2.13 Relationships & Foreign Keys →](13-relationships-and-foreign-keys.md)
