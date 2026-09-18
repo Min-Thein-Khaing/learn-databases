@@ -1,6 +1,6 @@
-← [3.4 Data Types in MongoDB](04-data-types.md)
+← [3.7 Data Types in MongoDB](07-data-types.md)
 
-# 3.5 Query Operators
+# 3.8 Query Operators
 
 Same job as [Lesson 2.5](../02-sql/05-operators.md)'s SQL operators —
 narrowing down a collection to just the documents that matter — using the
@@ -122,4 +122,4 @@ Same result as Step 1's `$ne` example.
 | `NOT` | `$not`, or a negating operator like `$ne` |
 
 ---
-← [3.4 Data Types in MongoDB](04-data-types.md) | Next: [3.6 Sort, Limit, Skip →](06-sort-limit-skip.md)
+← [3.7 Data Types in MongoDB](07-data-types.md) | Next: [3.9 Sort, Limit, Skip →](09-sort-limit-skip.md)

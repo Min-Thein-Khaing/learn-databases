@@ -20,16 +20,16 @@ VS Code, and most Markdown viewers), plus rendered PNG charts in
 |---|---|---|
 | [01 — Fundamentals](01-fundamentals/) | 8 | What data is, database types, brands, installation (native + Docker), GUI tools |
 | [02 — SQL (PostgreSQL)](02-sql/) | 21 | A full relational system: CRUD, table management, the CLI, users, normalization, joins, transactions, indexes, capstone |
-| [03 — NoSQL (MongoDB)](03-mongodb/) | 20 | The exact same system, rebuilt as documents: embedding, `$lookup`, pipelines, capstone |
+| [03 — Document Databases](03-document-db/) | 23 | Document database concepts, brands, JSON, and a practical MongoDB course |
 | [04 — Comparison](04-comparison/) | 6 | Same data and queries side by side, pros/cons, real-world scenarios, decision framework |
 
-55 lessons in total. Start at [Module 1, Lesson 1](01-fundamentals/01-what-is-data.md)
+58 lessons in total. Start at [Module 1, Lesson 1](01-fundamentals/01-what-is-data.md)
 and follow the "Next →" link at the bottom of each page straight through to
 the end.
 
 ## The running example
 
-Every lesson in Modules 2–4 uses the **same dataset** — an Apple Store's
+The hands-on lessons in Modules 2–4 use the **same dataset** — an Apple Store's
 products, customers, orders, and reviews — built up progressively and kept
 100% consistent across both databases. That's deliberate: it means every
 SQL-vs-MongoDB comparison in Module 4 is a real, checkable comparison, not

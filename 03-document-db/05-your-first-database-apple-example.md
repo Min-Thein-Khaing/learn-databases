@@ -1,6 +1,6 @@
-← [3.1 What Is MongoDB?](01-what-is-mongodb.md)
+← [3.4 What Is MongoDB?](04-what-is-mongodb.md)
 
-# 3.2 Your First Database: Storing Apple's Products
+# 3.5 Your First Database: Storing Apple's Products
 
 Same story as [Lesson 2.2](../02-sql/02-your-first-database-apple-example.md)
 — you're storing Apple's product catalog — rebuilt from scratch in MongoDB,
@@ -23,7 +23,7 @@ Step 2 at all. A **collection** (MongoDB's rough equivalent of a table) isn't
 declared up front with fixed columns — it springs into existence on your
 first `insertOne`/`insertMany`, and every document in it can have a
 different shape. (Whether that's a good idea is exactly what
-[Lesson 3.9](09-embedding-vs-referencing.md) digs into.)
+[Lesson 3.12](12-embedding-vs-referencing.md) digs into.)
 
 ## Step 3 — Insert data
 
@@ -80,7 +80,7 @@ db.products.find().sort({ price: 1 });                  // cheapest to most expe
 `find({ category: "laptop" })` is the direct equivalent of
 [Lesson 2.5](../02-sql/05-operators.md)'s `WHERE category = 'laptop'` — one
 plain object instead of a `WHERE` clause. `$lt` (less than) is the first of
-several **query operators**, covered fully in [Lesson 3.5](05-query-operators.md).
+several **query operators**, covered fully in [Lesson 3.8](08-query-operators.md).
 
 ## Step 5 — Delete data
 
@@ -169,4 +169,4 @@ that's deliberate, and every lesson from here uses it.
 | Update one/many | `UPDATE ... SET` | `updateOne()` / `updateMany()` |
 
 ---
-← [3.1 What Is MongoDB?](01-what-is-mongodb.md) | Next: [3.3 Types of MongoDB Operations →](03-types-of-mongodb-operations.md)
+← [3.4 What Is MongoDB?](04-what-is-mongodb.md) | Next: [3.6 Types of MongoDB Operations →](06-types-of-mongodb-operations.md)

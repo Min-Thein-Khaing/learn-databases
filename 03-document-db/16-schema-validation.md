@@ -1,8 +1,8 @@
-← [3.12 Aggregation Pipelines](12-aggregation-pipelines.md)
+← [3.15 Aggregation Pipelines](15-aggregation-pipelines.md)
 
-# 3.13 Schema Validation
+# 3.16 Schema Validation
 
-Same 3 scenarios as [Lesson 2.13](../02-sql/13-constraints.md) — a bank that
+Same 3 scenarios as [Lesson 2.13](../02-sql/16-constraints.md) — a bank that
 must never allow a negative balance, a hospital that must never allow
 duplicate license numbers, a shop that must never reference a nonexistent
 product. MongoDB has tools for some of these — not all.
@@ -19,7 +19,7 @@ db.products.insertOne({ _id: 1, name: "Duplicate!" });
 
 ## Step 2 — Foreign keys: already covered, still not enforced
 
-[Lesson 3.10](10-relationships-in-mongodb.md) already showed this gap in
+[Lesson 3.13](13-relationships-in-mongodb.md) already showed this gap in
 full — nothing here changes it. Schema validation (below) can check a
 field's *type*, but never that its value exists in another collection.
 
@@ -61,11 +61,11 @@ db.products.insertOne({ _id: 12, name: "Bad Product", category: "smartphone", pr
 // Document failed validation — price: -50 violates "minimum: 0"
 ```
 
-Same fix as [Lesson 2.13](../02-sql/13-constraints.md)'s retroactive
+Same fix as [Lesson 2.13](../02-sql/16-constraints.md)'s retroactive
 `ALTER TABLE ... ADD CONSTRAINT` — `collMod` adds validation to a collection
 that already exists, closing the exact same "nothing stops a negative price"
 gap MongoDB's `products` collection has had since
-[Lesson 3.2](02-your-first-database-apple-example.md).
+[Lesson 3.5](05-your-first-database-apple-example.md).
 
 `enum` here also functions as a `CHECK (category IN (...))` equivalent —
 restricting `category` to a fixed, known list.
@@ -79,18 +79,18 @@ every write against every document unconditionally.
 
 `required: [...]` above is the `NOT NULL` equivalent — those fields must be
 present. But note what's **missing** compared to
-[Lesson 2.13](../02-sql/13-constraints.md): there's no MongoDB equivalent of
+[Lesson 2.13](../02-sql/16-constraints.md): there's no MongoDB equivalent of
 SQL's `DEFAULT`. A field with no default fills in at the database level in
 PostgreSQL; in MongoDB, *your application code* has to supply every field's
-value at insert time (exactly what [Lesson 3.2](02-your-first-database-apple-example.md)
+value at insert time (exactly what [Lesson 3.5](05-your-first-database-apple-example.md)
 did manually with `created_at: new Date()`).
 
 ## Step 6 — Recap
 
-| SQL ([Lesson 2.13](../02-sql/13-constraints.md)) | MongoDB |
+| SQL ([Lesson 2.13](../02-sql/16-constraints.md)) | MongoDB |
 |---|---|
 | `PRIMARY KEY` | `_id`, unique automatically |
-| `FOREIGN KEY` | **No equivalent** — not enforced (Lesson 3.10) |
+| `FOREIGN KEY` | **No equivalent** — not enforced (Lesson 3.13) |
 | `UNIQUE` | `createIndex({ field: 1 }, { unique: true })` |
 | `CHECK` | `$jsonSchema` validator (`minimum`, `maximum`, `enum`, ...) |
 | `NOT NULL` | `required: [...]` in the validator |
@@ -98,4 +98,4 @@ did manually with `created_at: new Date()`).
 | Composite `PRIMARY KEY` | A compound unique index across multiple fields |
 
 ---
-← [3.12 Aggregation Pipelines](12-aggregation-pipelines.md) | Next: [3.14 Transactions →](14-transactions.md)
+← [3.15 Aggregation Pipelines](15-aggregation-pipelines.md) | Next: [3.17 Transactions →](17-transactions.md)

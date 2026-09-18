@@ -1,6 +1,6 @@
-← [3.3 Types of MongoDB Operations](03-types-of-mongodb-operations.md)
+← [3.6 Types of MongoDB Operations](06-types-of-mongodb-operations.md)
 
-# 3.4 Data Types in MongoDB (BSON)
+# 3.7 Data Types in MongoDB (BSON)
 
 MongoDB stores documents as **BSON** (Binary JSON) — JSON's familiar shape,
 plus extra types JSON itself doesn't have (like real dates and dedicated
@@ -60,7 +60,7 @@ worth knowing as a common, pragmatic alternative.
 
 ## `ObjectId`: MongoDB's default unique ID
 
-If you don't provide `_id` yourself (like [Lesson 3.2](02-your-first-database-apple-example.md)
+If you don't provide `_id` yourself (like [Lesson 3.5](05-your-first-database-apple-example.md)
 did with plain integers), MongoDB generates a 12-byte `ObjectId` —
 guaranteed unique across collections, servers, and time, without needing a
 central counter the way SQL's `SERIAL` does:
@@ -81,7 +81,7 @@ db.reviews.insertOne({ product_id: 1, rating: 5 });
 ```
 
 `specs` is an embedded document — no separate `product_specs` table needed.
-[Lesson 3.9](09-embedding-vs-referencing.md) covers exactly when this is a
+[Lesson 3.12](12-embedding-vs-referencing.md) covers exactly when this is a
 good idea, and when it isn't.
 
 ## Recap: BSON vs. PostgreSQL types
@@ -98,4 +98,4 @@ good idea, and when it isn't.
 | Nested structured data | `JSONB` | Native — every document can nest |
 
 ---
-← [3.3 Types of MongoDB Operations](03-types-of-mongodb-operations.md) | Next: [3.5 Query Operators →](05-query-operators.md)
+← [3.6 Types of MongoDB Operations](06-types-of-mongodb-operations.md) | Next: [3.8 Query Operators →](08-query-operators.md)

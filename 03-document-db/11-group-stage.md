@@ -1,6 +1,6 @@
-← [3.7 Aggregation Functions](07-aggregation-functions.md)
+← [3.10 Aggregation Functions](10-aggregation-functions.md)
 
-# 3.8 The `$group` Stage
+# 3.11 The `$group` Stage
 
 Same job as [Lesson 2.8](../02-sql/08-group.md)'s `GROUP BY` — one summary
 per category, not one for the whole collection.
@@ -27,7 +27,7 @@ db.products.aggregate([
 | desktop | 1 |
 
 `_id: "$category"` is what makes this a *grouped* aggregation instead of
-[Lesson 3.7](07-aggregation-functions.md)'s single-group summary — every
+[Lesson 3.10](10-aggregation-functions.md)'s single-group summary — every
 document sharing the same `category` value collapses into one output
 document, matching [Lesson 2.8](../02-sql/08-group.md)'s SQL result exactly.
 
@@ -107,4 +107,4 @@ gets filtered by the second `$match`.
 | Every `SELECT`ed column must be grouped/aggregated | Not applicable — `$group`'s output is only ever `_id` + accumulators |
 
 ---
-← [3.7 Aggregation Functions](07-aggregation-functions.md) | Next: [3.9 Embedding vs. Referencing →](09-embedding-vs-referencing.md)
+← [3.10 Aggregation Functions](10-aggregation-functions.md) | Next: [3.12 Embedding vs. Referencing →](12-embedding-vs-referencing.md)

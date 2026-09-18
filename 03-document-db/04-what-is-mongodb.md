@@ -1,6 +1,6 @@
-← [2.20 Part 1 Conclusion](../02-sql/20-conclusion.md)
+← [3.3 What Is JSON?](03-what-is-json.md)
 
-# 3.1 What Is MongoDB?
+# 3.4 What Is MongoDB?
 
 Welcome to Part 2 — everything here uses **MongoDB**. Before any
 definitions, 3 real-world moments where a document database is the natural
@@ -70,4 +70,4 @@ gaining) by being flexible instead.
   return here, just with different syntax and different tradeoffs.
 
 ---
-← [2.20 Part 1 Conclusion](../02-sql/20-conclusion.md) | Next: [3.2 Your First Database →](02-your-first-database-apple-example.md)
+← [3.3 What Is JSON?](03-what-is-json.md) | Next: [3.5 Your First Database →](05-your-first-database-apple-example.md)

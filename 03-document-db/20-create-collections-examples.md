@@ -1,8 +1,8 @@
-← [3.16 Views](16-views.md)
+← [3.19 Views](19-views.md)
 
-# 3.17 Create Collections: More Examples
+# 3.20 Create Collections: More Examples
 
-Same idea as [Lesson 2.17](../02-sql/17-create-tables-examples.md) — more
+Same idea as [Lesson 2.17](../02-sql/09-table-management.md) — more
 practice with fresh domains, plus a couple of capabilities SQL has no
 equivalent for at all.
 
@@ -28,7 +28,7 @@ db.tasks.insertMany([
 ]);
 ```
 
-Same `enum` pattern as [Lesson 3.13](13-schema-validation.md) standing in
+Same `enum` pattern as [Lesson 3.16](16-schema-validation.md) standing in
 for SQL's `CHECK (priority IN (...))`.
 
 ## Step 2 — A fresh domain: a small blog
@@ -46,7 +46,7 @@ db.posts.insertMany([
 db.posts.createIndex({ slug: 1 }, { unique: true });
 ```
 
-Same design choice as [Lesson 2.17](../02-sql/17-create-tables-examples.md):
+Same design choice as [Lesson 2.17](../02-sql/09-table-management.md):
 `published_at: null` means "draft," rather than a separate boolean field
 that could disagree with the actual date.
 
@@ -67,7 +67,7 @@ db.inventory.createIndex({ warehouse_id: 1, product_id: 1 }, { unique: true });
 ```
 
 A compound unique index is the MongoDB equivalent of
-[Lesson 2.17](../02-sql/17-create-tables-examples.md)'s composite
+[Lesson 2.17](../02-sql/09-table-management.md)'s composite
 `PRIMARY KEY (warehouse_id, product_id)` — same guarantee, same reasoning.
 
 ## Step 4 — Snapshotting data: `$out`
@@ -119,4 +119,4 @@ created_at < ...` needed.
 | TTL index (SQL has no equivalent) | Step 5 |
 
 ---
-← [3.16 Views](16-views.md) | Next: [3.18 User & Access Management →](18-user-access-management.md)
+← [3.19 Views](19-views.md) | Next: [3.21 User & Access Management →](21-user-access-management.md)

@@ -436,4 +436,4 @@ GRANT UPDATE ON reviews TO support_agent;
 </details>
 
 ---
-← [Task 1](22-task-1.md) | Next: [3.1 What Is MongoDB? →](../03-mongodb/01-what-is-mongodb.md)
+← [Task 1](22-task-1.md) | Next: [3.1 What Is a Document Database? →](../03-document-db/01-what-is-a-document-database.md)

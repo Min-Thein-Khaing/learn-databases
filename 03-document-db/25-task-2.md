@@ -1,18 +1,18 @@
-← [Task 1](21-task-1.md)
+← [Task 1](24-task-1.md)
 
-# Task 2: Write the Queries — Lessons 3.12–3.20
+# Task 2: Write the Queries — Lessons 3.15–3.23
 
 2 practice tasks for each remaining Part 2 lesson — from
-[3.12 Aggregation Pipelines](12-aggregation-pipelines.md) through
-[3.19 Capstone](19-capstone.md), plus a closing pair tied to
-[3.20 Part 2 Conclusion](20-conclusion.md) — 18 tasks total. Write the
+[3.15 Aggregation Pipelines](15-aggregation-pipelines.md) through
+[3.22 Capstone](22-capstone.md), plus a closing pair tied to
+[3.23 Part 2 Conclusion](23-conclusion.md) — 18 tasks total. Write the
 MongoDB shell code yourself first; each answer is hidden in a collapsed
 **Show answer** section. Tasks build on the `customers` / `orders` /
 `products` / `reviews` collections from these lessons.
 
 ---
 
-## 3.12 Aggregation Pipelines
+## 3.15 Aggregation Pipelines
 
 **Task 1.** SQL can answer "find every product priced above the overall
 average" with a single self-contained subquery. Write the two-step MongoDB
@@ -36,13 +36,13 @@ db.products.find({ price: { $gt: avgPrice } });
 Unlike SQL, a plain `find()` has no way to reference "the result of a
 previous aggregation" inline — the two steps run separately in your
 application code, or you reach for `$facet` (as in
-[3.19 Capstone, Step 7](19-capstone.md)) to do it in a single round trip.
+[3.22 Capstone, Step 7](22-capstone.md)) to do it in a single round trip.
 </details>
 
 **Task 2.** Write a pipeline that computes total inventory value
 (`price * stock`) per category, keeping only categories whose total exceeds
 `500000` — as two named pipeline stages, the way
-[3.12, Step 1](12-aggregation-pipelines.md) showed a `$group` followed by a
+[3.15, Step 1](15-aggregation-pipelines.md) showed a `$group` followed by a
 `$match` acts exactly like a CTE followed by a `WHERE` filter.
 
 <details>
@@ -61,7 +61,7 @@ Returns `smartphone` (1,223,900), `laptop` (656,550), and `tablet`
 
 ---
 
-## 3.13 Schema Validation
+## 3.16 Schema Validation
 
 **Task 3.** Add `$jsonSchema` rules to an existing `products` collection so
 `price` must always be strictly greater than `0`, and `stock` can never go
@@ -110,7 +110,7 @@ makes the *pair* unique instead, the direct equivalent of SQL's composite
 
 ---
 
-## 3.14 Transactions
+## 3.17 Transactions
 
 **Task 5.** Write a transaction that inserts a new order for
 `customer_id = 3`, with one item for `product_id = 4` and `quantity = 2`,
@@ -146,7 +146,7 @@ from the same transaction.
 <summary>Show answer</summary>
 
 All 5 steps abort — MongoDB transactions are all-or-nothing, with **no
-`SAVEPOINT`** equivalent ([3.14, Step 6](14-transactions.md)). To "keep the
+`SAVEPOINT`** equivalent ([3.17, Step 6](17-transactions.md)). To "keep the
 order but discard the item," you'd have to abort the whole transaction and
 restart it from scratch without the mistaken item — there's no partial
 rollback point to return to mid-transaction, unlike SQL.
@@ -154,7 +154,7 @@ rollback point to return to mid-transaction, unlike SQL.
 
 ---
 
-## 3.15 Indexes & Performance
+## 3.18 Indexes & Performance
 
 **Task 7.** `orders.customer_id` is referenced constantly via `$lookup`.
 Write the statement to index it, and explain why MongoDB doesn't index it
@@ -195,7 +195,7 @@ composite index in [2.18](../02-sql/18-indexes-and-performance.md).
 
 ---
 
-## 3.16 Views
+## 3.19 Views
 
 **Task 9.** Save the category → inventory-value aggregation from Task 2 as
 a view named `category_inventory_value`, without the filtering stage this
@@ -234,10 +234,10 @@ collection.
 
 ---
 
-## 3.17 Create Collections: More Examples
+## 3.20 Create Collections: More Examples
 
 **Task 11.** Using the capped-collection and TTL-index tools from
-[3.17](17-create-collections-examples.md) — both things SQL has no
+[3.20](20-create-collections-examples.md) — both things SQL has no
 equivalent for — write the statements to: 1) create a capped collection
 named `error_log` holding at most 500 documents within 5MB, and 2) make
 documents in a `page_views` collection expire automatically 24 hours after
@@ -282,7 +282,7 @@ db.tasks.insertOne({ title: "Bad task", priority: "urgent" });
 
 ---
 
-## 3.18 User & Access Management
+## 3.21 User & Access Management
 
 **Task 13.** Create a custom role named `reviewModerator` granting `find`
 and `update` (but not `insert`/`remove`) on just the `reviews` collection in
@@ -324,7 +324,7 @@ db.updateUser("app_user", { pwd: "a_much_better_password_789" });
 
 ---
 
-## 3.19 Capstone
+## 3.22 Capstone
 
 **Task 15.** Create the `reviews` collection with schema validation
 requiring `customer_id`, `product_id`, and `rating` (1–5), plus a unique
@@ -364,7 +364,7 @@ db.products.aggregate([
 
 **Task 16.** Write a pipeline finding every product whose average rating is
 above the overall average rating across all reviewed products — using
-`$facet` the way [3.19, Step 7](19-capstone.md) combined a per-product list
+`$facet` the way [3.22, Step 7](22-capstone.md) combined a per-product list
 with an overall average in one round trip.
 
 <details>
@@ -390,19 +390,19 @@ db.products.aggregate([
 ]);
 ```
 
-Using [3.19](19-capstone.md)'s review data (iPhone 17 Pro 5.00, MacBook Air
+Using [3.22](22-capstone.md)'s review data (iPhone 17 Pro 5.00, MacBook Air
 5.00, AirPods Max 4.00, iPad Air 3.00 — overall average 4.25): the result
 is **iPhone 17 Pro** and **MacBook Air**, the only two above 4.25.
 </details>
 
 ---
 
-## 3.20 Part 2 Conclusion
+## 3.23 Part 2 Conclusion
 
 **Task 17.** Using everything from Part 2, write one aggregation finding
 every customer who has spent more than the *average* amount spent across
 all customers — combining `$lookup`, the array-flattening pattern from
-[3.11's bonus step](11-lookup-joins.md), and `$facet`.
+[3.14's bonus step](14-lookup-joins.md), and `$facet`.
 
 <details>
 <summary>Show answer</summary>
@@ -430,7 +430,7 @@ db.customers.aggregate([
 ]);
 ```
 
-Using [3.16 Views](16-views.md)'s totals (Alice 3396.00, Bob 2788.20, Carla
+Using [3.19 Views](19-views.md)'s totals (Alice 3396.00, Bob 2788.20, Carla
 1198.00 — overall average 2460.73): **Alice Chen** and **Bob Diaz** both
 spent above average; only Carla falls below it.
 </details>
@@ -465,4 +465,4 @@ and no `update` on any other collection.
 </details>
 
 ---
-← [Task 1](21-task-1.md) | Next: [Chapter 4 — Comparison →](../04-comparison/01-same-data-two-ways.md)
+← [Task 1](24-task-1.md) | Next: [Chapter 4 — Comparison →](../04-comparison/01-same-data-two-ways.md)

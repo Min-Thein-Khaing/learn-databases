@@ -1,17 +1,17 @@
-← [3.18 User & Access Management](18-user-access-management.md)
+← [3.21 User & Access Management](21-user-access-management.md)
 
-# 3.19 Capstone: Product Reviews
+# 3.22 Capstone: Product Reviews
 
-The exact same feature as [Lesson 2.19](../02-sql/19-capstone.md) — product
+The exact same feature as [Lesson 2.19](../02-sql/20-capstone.md) — product
 reviews — rebuilt with everything from Part 2.
 
 ## Step 1 — Design: embed, or reference?
 
-Applying [Lesson 3.9](09-embedding-vs-referencing.md)'s decision rule:
+Applying [Lesson 3.12](12-embedding-vs-referencing.md)'s decision rule:
 reviews are **not** bounded (a popular product could have thousands) and are
 often queried **independently** of a specific product (e.g., "show all of
 Alice's reviews"). Both point the same direction as
-[Lesson 2.9](../02-sql/09-normalization.md)'s SQL design: a **separate**
+[Lesson 2.9](../02-sql/12-normalization.md)'s SQL design: a **separate**
 `reviews` collection, referencing `customer_id` and `product_id` — not
 embedded into `products`.
 
@@ -35,7 +35,7 @@ db.reviews.createIndex({ customer_id: 1, product_id: 1 }, { unique: true });   /
 
 ## Step 3 — Add reviews, as a transaction (Transactions)
 
-Mirroring [Lesson 2.19](../02-sql/19-capstone.md)'s imagined
+Mirroring [Lesson 2.19](../02-sql/20-capstone.md)'s imagined
 `review_count` sync:
 
 ```js
@@ -57,7 +57,7 @@ try {
 ## Step 4 — Add the index (Indexes & Performance)
 
 Already added in Step 2 — `{ customer_id: 1, product_id: 1 }` serves both as
-the uniqueness guarantee *and* the index [Lesson 3.15](15-indexes-and-performance.md)
+the uniqueness guarantee *and* the index [Lesson 3.18](18-indexes-and-performance.md)
 would otherwise ask you to add manually for `product_id` lookups.
 
 ## Step 5 — Per-product ratings (`$lookup` + `$group`)
@@ -101,7 +101,7 @@ db.createView("product_ratings", "products", [
 ## Step 7 — The final synthesis query — and an honest limit
 
 *"Which products are outperforming average on **both** revenue and
-rating?"* In SQL ([Lesson 2.19](../02-sql/19-capstone.md)), this was one
+rating?"* In SQL ([Lesson 2.19](../02-sql/20-capstone.md)), this was one
 clean CTE-based query. In MongoDB, it genuinely takes more machinery —
 worth seeing in full, not glossed over:
 
@@ -152,7 +152,7 @@ db.products.aggregate([
 **Identical result to SQL** — but notice what it took: 2 correlated
 sub-pipeline `$lookup`s, a `$facet` to compute two overall averages
 alongside the per-product data, and a final `$filter` to bring it together.
-This is the same honest tradeoff from [Lesson 3.11](11-lookup-joins.md):
+This is the same honest tradeoff from [Lesson 3.14](14-lookup-joins.md):
 MongoDB handles "fetch one document with everything it needs" beautifully;
 cross-document analytical questions like this one lean on more, and more
 advanced, pipeline machinery than SQL's equivalent CTE.
@@ -161,7 +161,7 @@ advanced, pipeline machinery than SQL's equivalent CTE.
 
 ```js
 db.grantRolesToUser("app_user", [
-  { role: "orderProcessor", db: "apple_store" }   // from Lesson 3.18
+  { role: "orderProcessor", db: "apple_store" }   // from Lesson 3.21
 ]);
 db.createRole({
   role: "reviewWriter",
@@ -172,7 +172,7 @@ db.grantRolesToUser("app_user", ["reviewWriter"]);
 ```
 
 No `update`/`remove` granted — reviews are immutable once posted, same rule
-as [Lesson 2.19](../02-sql/19-capstone.md).
+as [Lesson 2.19](../02-sql/20-capstone.md).
 
 ---
-← [3.18 User & Access Management](18-user-access-management.md) | Next: [3.20 Part 2 Conclusion →](20-conclusion.md)
+← [3.21 User & Access Management](21-user-access-management.md) | Next: [3.23 Part 2 Conclusion →](23-conclusion.md)

@@ -1,8 +1,8 @@
-← [3.10 Relationships in MongoDB](10-relationships-in-mongodb.md)
+← [3.13 Relationships in MongoDB](13-relationships-in-mongodb.md)
 
-# 3.11 `$lookup` (Joining Collections)
+# 3.14 `$lookup` (Joining Collections)
 
-Same 3 scenarios as [Lesson 2.11](../02-sql/11-joins.md) — a shop needing
+Same 3 scenarios as [Lesson 2.11](../02-sql/14-joins.md) — a shop needing
 customer + order data together, a university needing students + courses,
 a hospital needing patients + doctors + appointments. `$lookup` is
 MongoDB's join.
@@ -40,7 +40,7 @@ db.customers.aggregate([
 | Bob Diaz | `[order 2]` |
 | Carla Ruiz | `[]` (empty array) |
 
-Unlike SQL's `LEFT JOIN` ([Lesson 2.11](../02-sql/11-joins.md)), which fills
+Unlike SQL's `LEFT JOIN` ([Lesson 2.11](../02-sql/14-joins.md)), which fills
 unmatched rows with `NULL` columns, `$lookup` keeps **every** customer and
 gives Carla an **empty array**, not a missing/null field — worth remembering
 since checking for "no match" looks different:
@@ -60,7 +60,7 @@ db.customers.aggregate([
 
 ## Step 3 — No dedicated `RIGHT JOIN` or `FULL OUTER JOIN`
 
-Same fix as SQL's `RIGHT JOIN` note ([Lesson 2.11](../02-sql/11-joins.md)) —
+Same fix as SQL's `RIGHT JOIN` note ([Lesson 2.11](../02-sql/14-joins.md)) —
 just start the pipeline from the other collection. A true `FULL OUTER JOIN`
 equivalent exists (`$unionWith` combined with two opposite `$lookup`s), but
 it's rare enough in practice that most teams restructure the question
@@ -94,7 +94,7 @@ db.orders.aggregate([
 | Alice Chen | 3 | iPad Pro | 1 | 999.00 | 999.00 |
 | Alice Chen | 3 | Mac Mini | 1 | 599.00 | 599.00 |
 
-Same result as [Lesson 2.11](../02-sql/11-joins.md)'s SQL join — but notice
+Same result as [Lesson 2.11](../02-sql/14-joins.md)'s SQL join — but notice
 the extra step: `$unwind: "$items"` had to come first, to turn each order's
 *embedded array* of items into separate documents the pipeline could join
 against individually.
@@ -128,7 +128,7 @@ db.customers.aggregate([
 | Bob Diaz | 989.10 |
 | Carla Ruiz | 0 |
 
-Same numbers as [Lesson 2.11](../02-sql/11-joins.md)'s SQL version — but
+Same numbers as [Lesson 2.11](../02-sql/14-joins.md)'s SQL version — but
 worth being honest about the cost: SQL solved this with a `JOIN` + `SUM` +
 `GROUP BY`. Here, each customer's `orders` embeds an *array of arrays* of
 items (one items-array per order), so getting one flat total requires
@@ -140,7 +140,7 @@ complex than SQL's equivalent.
 
 ## Recap
 
-| SQL ([Lesson 2.11](../02-sql/11-joins.md)) | MongoDB |
+| SQL ([Lesson 2.11](../02-sql/14-joins.md)) | MongoDB |
 |---|---|
 | `INNER JOIN` | `$lookup` + `$unwind` (drops unmatched, since `$unwind` skips empty arrays) |
 | `LEFT JOIN` | `$lookup` alone (always keeps every source document) |
@@ -149,4 +149,4 @@ complex than SQL's equivalent.
 | Join + `SUM`/`GROUP BY` | Often needs `$reduce`/`$map` to flatten embedded arrays first |
 
 ---
-← [3.10 Relationships in MongoDB](10-relationships-in-mongodb.md) | Next: [3.12 Aggregation Pipelines →](12-aggregation-pipelines.md)
+← [3.13 Relationships in MongoDB](13-relationships-in-mongodb.md) | Next: [3.15 Aggregation Pipelines →](15-aggregation-pipelines.md)

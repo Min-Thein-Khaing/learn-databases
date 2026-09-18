@@ -1,10 +1,10 @@
-← [3.9 Embedding vs. Referencing](09-embedding-vs-referencing.md)
+← [3.12 Embedding vs. Referencing](12-embedding-vs-referencing.md)
 
-# 3.10 Relationships in MongoDB
+# 3.13 Relationships in MongoDB
 
-[Lesson 3.9](09-embedding-vs-referencing.md) decided *what* to embed and
+[Lesson 3.12](12-embedding-vs-referencing.md) decided *what* to embed and
 what to reference. Let's actually build it — and confront MongoDB's biggest
-honest tradeoff versus [Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md)'s
+honest tradeoff versus [Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)'s
 SQL foreign keys.
 
 ## Step 1 — One-to-many: `customers` → `orders`
@@ -28,15 +28,15 @@ db.orders.insertMany([
 ]);
 ```
 
-Same 3 orders as [Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md)
+Same 3 orders as [Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)
 — Alice has orders 1 and 3, Bob has order 2, and Carla has **zero orders**.
 
 ## Step 2 — No junction table needed here
 
-[Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md)'s many-to-many
+[Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)'s many-to-many
 between `orders` and `products` needed a separate `order_items` table.
 Here, that relationship is already handled — it's embedded directly as each
-order's `items` array, decided back in [Lesson 3.9](09-embedding-vs-referencing.md).
+order's `items` array, decided back in [Lesson 3.12](12-embedding-vs-referencing.md).
 A genuine many-to-many that *does* need real references on both sides (e.g.,
 products tagged with multiple categories, where tags are shared and queried
 independently) would instead store an array of IDs: `tags: [3, 7, 12]`.
@@ -53,7 +53,7 @@ db.orders.insertOne({
 // Succeeds. No error. MongoDB has no idea customer_id 9999 doesn't exist.
 ```
 
-Compare this to [Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md),
+Compare this to [Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md),
 Step 5 — PostgreSQL's foreign key **rejected** exactly this. MongoDB has
 **no equivalent mechanism**: a reference is just a plain number sitting in a
 field, and nothing checks it points anywhere real.
@@ -74,7 +74,7 @@ entirely to your application:
 
 - **Application-level checks** — look up the customer before inserting the
   order, in your own code.
-- **Schema validation** ([Lesson 3.13](13-schema-validation.md)) — can
+- **Schema validation** ([Lesson 3.16](16-schema-validation.md)) — can
   enforce a field's *type* and *shape*, but not that its value exists in
   another collection.
 - **Accept it, deliberately** — some teams choose MongoDB precisely for
@@ -87,7 +87,7 @@ it directly against SQL's guarantees.
 
 ## Step 5 — Recap
 
-| | SQL ([Lesson 2.10](../02-sql/10-relationships-and-foreign-keys.md)) | MongoDB |
+| | SQL ([Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)) | MongoDB |
 |---|---|---|
 | One-to-many | FK on the "many" side, enforced | Reference field, **not enforced** |
 | Many-to-many | Junction table, enforced both sides | Array of IDs, **not enforced** |
@@ -96,4 +96,4 @@ it directly against SQL's guarantees.
 | Who enforces correctness? | The database | Your application code |
 
 ---
-← [3.9 Embedding vs. Referencing](09-embedding-vs-referencing.md) | Next: [3.11 `$lookup` (Joining Collections) →](11-lookup-joins.md)
+← [3.12 Embedding vs. Referencing](12-embedding-vs-referencing.md) | Next: [3.14 `$lookup` (Joining Collections) →](14-lookup-joins.md)

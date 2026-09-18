@@ -1,6 +1,6 @@
-← [3.2 Your First Database](02-your-first-database-apple-example.md)
+← [3.5 Your First Database](05-your-first-database-apple-example.md)
 
-# 3.3 Types of MongoDB Operations
+# 3.6 Types of MongoDB Operations
 
 Before any syntax, 3 real-world situations that need very different *kinds*
 of MongoDB operations — echoing [Lesson 2.3](../02-sql/03-types-of-sql-queries.md)'s
@@ -17,7 +17,7 @@ access to patient records, without letting them drop a collection.
 
 **3. A bank's MongoDB-backed ledger** must reserve funds and record a
 transaction together, or not at all — the same all-or-nothing need from
-[Lesson 2.14](../02-sql/14-transactions.md), now in a document database.
+[Lesson 2.14](../02-sql/17-transactions.md), now in a document database.
 
 ## The 5 categories, mapped from SQL
 
@@ -39,7 +39,7 @@ db.orders.drop();                     // deletes the whole collection
 
 ## Step 2 — CRUD (Create, Read, Update, Delete)
 
-Already used throughout [Lesson 3.2](02-your-first-database-apple-example.md):
+Already used throughout [Lesson 3.5](05-your-first-database-apple-example.md):
 
 ```js
 db.products.insertOne({ ... });
@@ -54,7 +54,7 @@ db.products.deleteOne({ _id: 6 });
 db.products.find({ price: { $gt: 1000 } });   // simple query
 db.products.aggregate([
   { $group: { _id: "$category", avgPrice: { $avg: "$price" } } }
-]);                                             // multi-stage pipeline — Lesson 3.12
+]);                                             // multi-stage pipeline — Lesson 3.15
 ```
 
 ## Step 4 — User & role management
@@ -67,8 +67,8 @@ db.createUser({
 });
 ```
 
-Covered fully in [Lesson 3.18](18-user-access-management.md) — the direct
-counterpart of [Lesson 2.18](../02-sql/18-user-access-management.md)'s
+Covered fully in [Lesson 3.21](21-user-access-management.md) — the direct
+counterpart of [Lesson 2.18](../02-sql/11-user-permission-management.md)'s
 `GRANT`/`REVOKE`.
 
 ## Step 5 — Transactions
@@ -85,7 +85,7 @@ try {
 }
 ```
 
-Covered fully in [Lesson 3.14](14-transactions.md).
+Covered fully in [Lesson 3.17](17-transactions.md).
 
 ## Recap
 
@@ -100,4 +100,4 @@ Covered fully in [Lesson 3.14](14-transactions.md).
 Same 5 jobs as SQL — different names, same underlying needs.
 
 ---
-← [3.2 Your First Database](02-your-first-database-apple-example.md) | Next: [3.4 Data Types in MongoDB →](04-data-types.md)
+← [3.5 Your First Database](05-your-first-database-apple-example.md) | Next: [3.7 Data Types in MongoDB →](07-data-types.md)

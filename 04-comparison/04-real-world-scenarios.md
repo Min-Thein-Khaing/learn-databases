@@ -19,7 +19,7 @@ not just the application" genuinely matters most.
 
 **Recommendation: MongoDB**, or a hybrid. A book has `author`/`ISBN`; a
 laptop has `CPU`/`RAM`; a t-shirt has `size`/`color` — exactly
-[Lesson 3.1](../03-mongodb/01-what-is-mongodb.md)'s opening scenario. Many
+[Lesson 3.4](../03-document-db/04-what-is-mongodb.md)'s opening scenario. Many
 real e-commerce systems actually run **both**: MongoDB for the catalog,
 SQL for orders/payments/inventory, since those need the stronger guarantees
 from scenario 1.
@@ -28,14 +28,14 @@ from scenario 1.
 
 **Recommendation: Neither, strictly** — a **graph database** ([Lesson 1.3](../01-fundamentals/03-types-of-databases.md))
 fits best for deep relationship traversal. Between just SQL and MongoDB,
-lean MongoDB: [Lesson 3.12](../03-mongodb/12-aggregation-pipelines.md)'s
+lean MongoDB: [Lesson 3.15](../03-document-db/15-aggregation-pipelines.md)'s
 `$graphLookup` handles multi-hop traversal more naturally than repeated SQL
 self-joins.
 
 ## 4. IoT sensor data / application logs
 
 **Recommendation: MongoDB.** Massive write volume, loosely structured
-records, and — from [Lesson 3.17](../03-mongodb/17-create-collections-examples.md)
+records, and — from [Lesson 3.20](../03-document-db/20-create-collections-examples.md)
 — **capped collections** and **TTL indexes** are purpose-built for exactly
 this: high-volume data that should expire or self-limit automatically,
 something SQL has no equivalent for at all.
@@ -54,7 +54,7 @@ the same SQL database.
 
 **Recommendation: MongoDB.** Player profiles evolve constantly (new
 achievements, changing stat fields) exactly like
-[Lesson 3.1](../03-mongodb/01-what-is-mongodb.md)'s scenario 3 — no
+[Lesson 3.4](../03-document-db/04-what-is-mongodb.md)'s scenario 3 — no
 migration needed every time a new feature ships a new field.
 
 ## 7. A university's course enrollment system

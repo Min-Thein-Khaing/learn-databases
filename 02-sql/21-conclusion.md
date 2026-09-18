@@ -58,4 +58,4 @@ embedding instead of joining, and a schema that bends instead of one that's
 enforced up front. That contrast is exactly the point.
 
 ---
-← [2.20 Capstone](20-capstone.md) | Next: [3.1 What Is MongoDB? →](../03-mongodb/01-what-is-mongodb.md)
+← [2.20 Capstone](20-capstone.md) | Next: [3.1 What Is a Document Database? →](../03-document-db/01-what-is-a-document-database.md)

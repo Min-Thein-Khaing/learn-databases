@@ -1,8 +1,8 @@
-← [3.17 Create Collections: More Examples](17-create-collections-examples.md)
+← [3.20 Create Collections: More Examples](20-create-collections-examples.md)
 
-# 3.18 User & Access Management
+# 3.21 User & Access Management
 
-Same distinction as [Lesson 2.18](../02-sql/18-user-access-management.md) —
+Same distinction as [Lesson 2.18](../02-sql/11-user-permission-management.md) —
 an application-level "user" (a document in a `customers` collection) is just
 data; a **database user** is MongoDB's own login identity, with its own
 permissions.
@@ -19,7 +19,7 @@ db.createUser({
 
 `app_user` can now read and write anything in `apple_store` — MongoDB's
 built-in roles are broader by default than SQL's per-table `GRANT`
-([Lesson 2.18](../02-sql/18-user-access-management.md)); scoping permissions
+([Lesson 2.18](../02-sql/11-user-permission-management.md)); scoping permissions
 to *specific collections* needs a custom role instead.
 
 ## Step 2 — Built-in roles
@@ -52,7 +52,7 @@ db.createUser({
 });
 ```
 
-Same principle as [Lesson 2.18](../02-sql/18-user-access-management.md)'s
+Same principle as [Lesson 2.18](../02-sql/11-user-permission-management.md)'s
 `GRANT SELECT, INSERT, UPDATE ON products, orders, order_items TO app_user`
 — explicit actions, on explicit collections, nothing more.
 
@@ -74,7 +74,7 @@ db.createUser({
 });
 ```
 
-Direct equivalent of [Lesson 2.18](../02-sql/18-user-access-management.md)'s
+Direct equivalent of [Lesson 2.18](../02-sql/11-user-permission-management.md)'s
 `read_only` role pattern — `analyst` can query every collection, and never
 insert, update, or delete anything.
 
@@ -91,7 +91,7 @@ db.dropUser("analyst");
 
 ## Recap
 
-| SQL ([Lesson 2.18](../02-sql/18-user-access-management.md)) | MongoDB |
+| SQL ([Lesson 2.18](../02-sql/11-user-permission-management.md)) | MongoDB |
 |---|---|
 | `CREATE ROLE`/`CREATE USER` | `db.createUser()` |
 | `GRANT ... ON ... TO ...` | A custom role's `privileges`, assigned via `roles: [...]` |
@@ -101,4 +101,4 @@ db.dropUser("analyst");
 | `DROP ROLE` | `db.dropUser()` |
 
 ---
-← [3.17 Create Collections: More Examples](17-create-collections-examples.md) | Next: [3.19 Capstone →](19-capstone.md)
+← [3.20 Create Collections: More Examples](20-create-collections-examples.md) | Next: [3.22 Capstone →](22-capstone.md)

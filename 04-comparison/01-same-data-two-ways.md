@@ -1,4 +1,4 @@
-← [3.20 Part 2 Conclusion](../03-mongodb/20-conclusion.md)
+← [3.23 Part 2 Conclusion](../03-document-db/23-conclusion.md)
 
 # 4.1 The Same Data, Two Ways
 
@@ -43,7 +43,7 @@ flowchart LR
     customers -.referenced.-> orders
 ```
 
-3 collections. [Lesson 3.9](../03-mongodb/09-embedding-vs-referencing.md)
+3 collections. [Lesson 3.12](../03-document-db/12-embedding-vs-referencing.md)
 **chose** to embed line items, because they're always read together with
 their order.
 
@@ -72,7 +72,7 @@ no join needed at all.
 | Line items | Separate table, required | Embedded array, chosen |
 | Fetch one full order | Requires a `JOIN` | One document read |
 | Add a new order field | `ALTER TABLE` | Just start writing it — no migration |
-| Guarantee every order has a real customer | Enforced (`FOREIGN KEY`) | **Not enforced** ([Lesson 3.10](../03-mongodb/10-relationships-in-mongodb.md)) |
+| Guarantee every order has a real customer | Enforced (`FOREIGN KEY`) | **Not enforced** ([Lesson 3.13](../03-document-db/13-relationships-in-mongodb.md)) |
 | Guarantee `order_items` never duplicates a product per order | Enforced (composite `PRIMARY KEY`) | Only if you add that check yourself |
 
 ## The pattern to notice
@@ -84,4 +84,4 @@ relationship, one at a time. [Lesson 4.2](02-same-query-two-ways.md) shows
 what querying each shape actually feels like.
 
 ---
-← [3.20 Part 2 Conclusion](../03-mongodb/20-conclusion.md) | Next: [4.2 The Same Query, Two Ways →](02-same-query-two-ways.md)
+← [3.23 Part 2 Conclusion](../03-document-db/23-conclusion.md) | Next: [4.2 The Same Query, Two Ways →](02-same-query-two-ways.md)

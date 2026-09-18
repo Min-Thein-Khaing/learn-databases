@@ -1,10 +1,10 @@
-← [3.11 `$lookup` (Joining Collections)](11-lookup-joins.md)
+← [3.14 `$lookup` (Joining Collections)](14-lookup-joins.md)
 
-# 3.12 Aggregation Pipelines
+# 3.15 Aggregation Pipelines
 
-[Lesson 2.12](../02-sql/12-subqueries-and-ctes.md) built queries from
+[Lesson 2.12](../02-sql/15-subqueries-and-ctes.md) built queries from
 smaller pieces — "first find X, then use it to find Y." Every aggregation
-you've written since [Lesson 3.7](07-aggregation-functions.md) has already
+you've written since [Lesson 3.10](10-aggregation-functions.md) has already
 been doing exactly that: **a pipeline is a chain of stages, each one working
 on the previous stage's output.**
 
@@ -17,7 +17,7 @@ db.products.aggregate([
 ]);
 ```
 
-This *is* [Lesson 2.12](../02-sql/12-subqueries-and-ctes.md)'s
+This *is* [Lesson 2.12](../02-sql/15-subqueries-and-ctes.md)'s
 `category_stats` CTE — no special keyword needed; every pipeline is already
 built from named, ordered steps, each one reading only what the step before
 it produced.
@@ -41,7 +41,7 @@ line-for-line equivalent; it's a genuinely MongoDB-shaped tool.
 
 ## Step 3 — `$graphLookup`: the recursive CTE equivalent
 
-[Lesson 2.12](../02-sql/12-subqueries-and-ctes.md)'s bonus section built a
+[Lesson 2.12](../02-sql/15-subqueries-and-ctes.md)'s bonus section built a
 staff org chart with `WITH RECURSIVE`. Same data, same question, in MongoDB:
 
 ```js
@@ -78,7 +78,7 @@ db.employees.aggregate([
 ```
 
 Same 4 people found, at the same relative depths as
-[Lesson 2.12](../02-sql/12-subqueries-and-ctes.md)'s SQL result — one
+[Lesson 2.12](../02-sql/15-subqueries-and-ctes.md)'s SQL result — one
 notable difference: `$graphLookup` returns Sarah's own document with
 `reports` **attached to it**, rather than one flat table including Sarah
 herself at `depth: 1`. No `UNION ALL`, no explicit anchor/recursive-step
@@ -87,12 +87,12 @@ a single stage.
 
 ## Step 4 — Recap
 
-| SQL ([Lesson 2.12](../02-sql/12-subqueries-and-ctes.md)) | MongoDB |
+| SQL ([Lesson 2.12](../02-sql/15-subqueries-and-ctes.md)) | MongoDB |
 |---|---|
 | Subquery / CTE | A pipeline stage, feeding the next stage |
 | Multiple independent subqueries on the same table | `$facet` |
 | `WITH RECURSIVE` (org charts, hierarchies) | `$graphLookup` |
-| `EXISTS` / `NOT EXISTS` | `$lookup` + `$match` on array size (Lesson 3.11) |
+| `EXISTS` / `NOT EXISTS` | `$lookup` + `$match` on array size (Lesson 3.14) |
 
 ---
-← [3.11 `$lookup` (Joining Collections)](11-lookup-joins.md) | Next: [3.13 Schema Validation →](13-schema-validation.md)
+← [3.14 `$lookup` (Joining Collections)](14-lookup-joins.md) | Next: [3.16 Schema Validation →](16-schema-validation.md)
