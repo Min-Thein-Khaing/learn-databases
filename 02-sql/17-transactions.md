@@ -131,7 +131,133 @@ actually succeed in reducing stock below zero — check how many rows were
 affected in your application code; `0` rows updated means "not enough stock,"
 handled safely without a separate read-then-write race.
 
-## Step 6 — Recap
+## Step 6 — Transactions with the practice databases
+
+The following examples use the tables from the
+[coffee-shop](24-coffeeshop.sql), [movie-website](26-movie-website.sql), and
+[education](28-education.sql) practice databases.
+
+### Coffee shop: save a complete sale
+
+A sale consists of a voucher and its line items. They must be saved together;
+a voucher without its items would be an incomplete sales record.
+
+```sql
+BEGIN;
+
+WITH new_voucher AS (
+    INSERT INTO vouchers
+        (shop_id, customer_id, voucher_number,
+         subtotal, discount, total, payment_method)
+    VALUES
+        (1, 1, 'BB-000025', 230.00, 10.00, 220.00, 'card')
+    RETURNING id
+)
+INSERT INTO voucher_items
+    (voucher_id, menu_id, quantity, price, subtotal)
+SELECT id, 1, 1, 80.00, 80.00 FROM new_voucher
+UNION ALL
+SELECT id, 10, 1, 150.00, 150.00 FROM new_voucher;
+
+COMMIT;
+```
+
+`RETURNING id` provides the new voucher's actual ID, so the code does not
+need to guess the next sequence value. If either line item is invalid, the
+transaction can be rolled back and no incomplete voucher remains.
+
+### Movie website: add or update a review
+
+The `UNIQUE (movie_id, user_id)` constraint permits one review per user for
+each movie. `ON CONFLICT` turns a second review into an update.
+
+```sql
+BEGIN;
+
+SELECT id
+FROM movies
+WHERE id = 3
+FOR SHARE;
+
+INSERT INTO reviews
+    (movie_id, user_id, rating, review_text)
+VALUES
+    (3, 2, 9, 'A warm, funny story with memorable characters.')
+ON CONFLICT (movie_id, user_id)
+DO UPDATE SET
+    rating = EXCLUDED.rating,
+    review_text = EXCLUDED.review_text,
+    updated_at = CURRENT_TIMESTAMP;
+
+COMMIT;
+```
+
+`FOR SHARE` prevents the selected movie from being deleted before the review
+transaction finishes. The insert and possible update are handled atomically.
+
+### Education: enroll a student safely
+
+The section row is locked while capacity is checked. Another enrollment for
+the same section must wait, which prevents two students from taking the final
+available seat simultaneously.
+
+```sql
+BEGIN;
+
+SELECT id, capacity
+FROM sections
+WHERE id = 2
+FOR UPDATE;
+
+INSERT INTO enrollments (student_id, section_id)
+SELECT 2, s.id
+FROM sections s
+WHERE s.id = 2
+  AND (
+      SELECT COUNT(*)
+      FROM enrollments e
+      WHERE e.section_id = s.id
+  ) < s.capacity
+ON CONFLICT (student_id, section_id) DO NOTHING
+RETURNING student_id, section_id;
+
+COMMIT;
+```
+
+One returned row means the enrollment succeeded. No returned row means the
+section was full or the student was already enrolled.
+
+### Education: correct a grade with a savepoint
+
+```sql
+BEGIN;
+
+UPDATE submissions
+SET score = 96,
+    feedback = 'Excellent schema design and clear documentation.'
+WHERE assignment_id = 1 AND student_id = 1;
+
+SAVEPOINT before_second_grade;
+
+UPDATE submissions
+SET score = 150
+WHERE assignment_id = 1 AND student_id = 2;
+
+-- The assignment is worth only 100 points, so undo this update.
+ROLLBACK TO SAVEPOINT before_second_grade;
+
+UPDATE submissions
+SET score = 88,
+    feedback = 'Good improvement; the corrected score is now recorded.'
+WHERE assignment_id = 1 AND student_id = 2;
+
+COMMIT;
+```
+
+Rolling back to the savepoint removes the incorrect second grade while
+preserving the valid first grade.
+
+## Step 7 — Recap
 
 | Command | Does |
 |---|---|
