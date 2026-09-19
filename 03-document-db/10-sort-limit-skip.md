@@ -1,6 +1,6 @@
-← [3.8 Query Operators](08-query-operators.md)
+← [3.9 Query Operators](09-query-operators.md)
 
-# 3.9 Sort, Limit, Skip
+# 3.10 Sort, Limit, Skip
 
 Same job as [Lesson 2.6](../02-sql/06-sort.md) — controlling order, and
 grabbing just a slice of the results — same product data throughout.
@@ -96,4 +96,4 @@ then sort, then take a slice, chained as method calls instead of clauses.
 | `LIMIT 3 OFFSET 3` | `.limit(3).skip(3)` |
 
 ---
-← [3.8 Query Operators](08-query-operators.md) | Next: [3.10 Aggregation Functions →](10-aggregation-functions.md)
+← [3.9 Query Operators](09-query-operators.md) | Next: [3.11 Aggregation Functions →](11-aggregation-functions.md)

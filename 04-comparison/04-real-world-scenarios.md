@@ -28,14 +28,14 @@ from scenario 1.
 
 **Recommendation: Neither, strictly** — a **graph database** ([Lesson 1.3](../01-fundamentals/03-types-of-databases.md))
 fits best for deep relationship traversal. Between just SQL and MongoDB,
-lean MongoDB: [Lesson 3.15](../03-document-db/15-aggregation-pipelines.md)'s
+lean MongoDB: [3.16](../03-document-db/16-aggregation-pipelines.md)'s
 `$graphLookup` handles multi-hop traversal more naturally than repeated SQL
 self-joins.
 
 ## 4. IoT sensor data / application logs
 
 **Recommendation: MongoDB.** Massive write volume, loosely structured
-records, and — from [Lesson 3.20](../03-document-db/20-create-collections-examples.md)
+records, and — from [3.21](../03-document-db/21-create-collections-examples.md)
 — **capped collections** and **TTL indexes** are purpose-built for exactly
 this: high-volume data that should expire or self-limit automatically,
 something SQL has no equivalent for at all.

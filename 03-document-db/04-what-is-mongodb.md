@@ -70,4 +70,4 @@ gaining) by being flexible instead.
   return here, just with different syntax and different tradeoffs.
 
 ---
-← [3.3 What Is BSON?](03-what-is-bson.md) | Next: [3.5 Your First Database →](05-your-first-database-apple-example.md)
+← [3.3 What Is BSON?](03-what-is-bson.md) | Next: [3.5 MongoDB Shell →](05-mongodb-shell.md)

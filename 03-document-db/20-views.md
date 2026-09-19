@@ -1,11 +1,11 @@
-← [3.18 Indexes & Performance](18-indexes-and-performance.md)
+← [3.19 Indexes & Performance](19-indexes-and-performance.md)
 
-# 3.19 Views
+# 3.20 Views
 
 Same idea as [Lesson 2.16](../02-sql/19-views.md) — a saved query you can
 read from like a real collection, without re-typing it every time.
 
-## Step 1 — Where our data stands after Lesson 3.17
+## Step 1 — Where our data stands after Lesson 3.18
 
 Same final totals as [Lesson 2.16](../02-sql/19-views.md)'s SQL version:
 Alice **3396.00**, Bob **2788.20**, Carla **1198.00**.
@@ -33,7 +33,7 @@ db.createView(
 ```
 
 `db.createView(name, source_collection, pipeline)` takes exactly the
-aggregation pipeline from [Lesson 3.14](14-lookup-joins.md)'s bonus step and
+aggregation pipeline from [3.15](15-lookup-joins.md)'s bonus step and
 saves it under a name — a MongoDB view *is* a saved aggregation pipeline,
 nothing more.
 
@@ -65,7 +65,7 @@ Same reasons as [Lesson 2.16](../02-sql/19-views.md): consistency (one
 definition, used everywhere), simplicity (a teammate queries
 `customer_order_summary`, not the raw `$lookup`/`$reduce` pipeline), and
 access control (a role can be granted read access to the view without
-touching the underlying collections — see [Lesson 3.21](21-user-access-management.md)).
+touching the underlying collections — see [3.22](22-user-access-management.md)).
 
 ## Step 5 — Views are always read-only
 
@@ -105,4 +105,4 @@ faster to read, goes stale until you re-run the aggregation.
 | Sometimes updatable | **Never** updatable |
 
 ---
-← [3.18 Indexes & Performance](18-indexes-and-performance.md) | Next: [3.20 Create Collections: More Examples →](20-create-collections-examples.md)
+← [3.19 Indexes & Performance](19-indexes-and-performance.md) | Next: [3.21 Create Collections: More Examples →](21-create-collections-examples.md)

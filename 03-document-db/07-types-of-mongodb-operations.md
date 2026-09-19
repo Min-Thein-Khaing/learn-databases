@@ -1,6 +1,6 @@
-← [3.5 Your First Database](05-your-first-database-apple-example.md)
+← [3.6 Your First Database](06-your-first-database-apple-example.md)
 
-# 3.6 Types of MongoDB Operations
+# 3.7 Types of MongoDB Operations
 
 Before any syntax, 3 real-world situations that need very different *kinds*
 of MongoDB operations — echoing [Lesson 2.3](../02-sql/03-types-of-sql-queries.md)'s
@@ -39,7 +39,7 @@ db.orders.drop();                     // deletes the whole collection
 
 ## Step 2 — CRUD (Create, Read, Update, Delete)
 
-Already used throughout [Lesson 3.5](05-your-first-database-apple-example.md):
+Already used throughout [3.6](06-your-first-database-apple-example.md):
 
 ```js
 db.products.insertOne({ ... });
@@ -54,7 +54,7 @@ db.products.deleteOne({ _id: 6 });
 db.products.find({ price: { $gt: 1000 } });   // simple query
 db.products.aggregate([
   { $group: { _id: "$category", avgPrice: { $avg: "$price" } } }
-]);                                             // multi-stage pipeline — Lesson 3.15
+]);                                             // multi-stage pipeline — Lesson 3.16
 ```
 
 ## Step 4 — User & role management
@@ -67,7 +67,7 @@ db.createUser({
 });
 ```
 
-Covered fully in [Lesson 3.21](21-user-access-management.md) — the direct
+Covered fully in [3.22](22-user-access-management.md) — the direct
 counterpart of [Lesson 2.18](../02-sql/11-user-permission-management.md)'s
 `GRANT`/`REVOKE`.
 
@@ -85,7 +85,7 @@ try {
 }
 ```
 
-Covered fully in [Lesson 3.17](17-transactions.md).
+Covered fully in [3.18](18-transactions.md).
 
 ## Recap
 
@@ -100,4 +100,4 @@ Covered fully in [Lesson 3.17](17-transactions.md).
 Same 5 jobs as SQL — different names, same underlying needs.
 
 ---
-← [3.5 Your First Database](05-your-first-database-apple-example.md) | Next: [3.7 Data Types in MongoDB →](07-data-types.md)
+← [3.6 Your First Database](06-your-first-database-apple-example.md) | Next: [3.8 Data Types in MongoDB →](08-data-types.md)

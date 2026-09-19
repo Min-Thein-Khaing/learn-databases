@@ -1,10 +1,10 @@
-← [3.14 `$lookup` (Joining Collections)](14-lookup-joins.md)
+← [3.15 `$lookup` (Joining Collections)](15-lookup-joins.md)
 
-# 3.15 Aggregation Pipelines
+# 3.16 Aggregation Pipelines
 
 [Lesson 2.12](../02-sql/15-subqueries-and-ctes.md) built queries from
 smaller pieces — "first find X, then use it to find Y." Every aggregation
-you've written since [Lesson 3.10](10-aggregation-functions.md) has already
+you've written since [3.11](11-aggregation-functions.md) has already
 been doing exactly that: **a pipeline is a chain of stages, each one working
 on the previous stage's output.**
 
@@ -92,7 +92,7 @@ a single stage.
 | Subquery / CTE | A pipeline stage, feeding the next stage |
 | Multiple independent subqueries on the same table | `$facet` |
 | `WITH RECURSIVE` (org charts, hierarchies) | `$graphLookup` |
-| `EXISTS` / `NOT EXISTS` | `$lookup` + `$match` on array size (Lesson 3.14) |
+| `EXISTS` / `NOT EXISTS` | `$lookup` + `$match` on array size (Lesson 3.15) |
 
 ---
-← [3.14 `$lookup` (Joining Collections)](14-lookup-joins.md) | Next: [3.16 Schema Validation →](16-schema-validation.md)
+← [3.15 `$lookup` (Joining Collections)](15-lookup-joins.md) | Next: [3.17 Schema Validation →](17-schema-validation.md)

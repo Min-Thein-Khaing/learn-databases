@@ -12,7 +12,7 @@ straight from Parts 1 and 2.
 SELECT name, price FROM products WHERE category = 'laptop' AND price < 1000;
 ```
 ```js
-// MongoDB (Lesson 3.8)
+// MongoDB (Lesson 3.9)
 db.products.find({ category: "laptop", price: { $lt: 1000 } });
 ```
 Both return: **MacBook Air, 989.10**. Roughly the same amount of typing,
@@ -27,7 +27,7 @@ LEFT JOIN orders o ON o.customer_id = c.customer_id
 WHERE o.order_id IS NULL;
 ```
 ```js
-// MongoDB (Lesson 3.14)
+// MongoDB (Lesson 3.15)
 db.customers.aggregate([
   { $lookup: { from: "orders", localField: "_id", foreignField: "customer_id", as: "orders" } },
   { $match: { orders: { $size: 0 } } }
@@ -49,7 +49,7 @@ GROUP BY c.customer_id, c.name
 ORDER BY total_spent DESC;
 ```
 ```js
-// MongoDB (Lesson 3.14)
+// MongoDB (Lesson 3.15)
 db.customers.aggregate([
   { $lookup: { from: "orders", localField: "_id", foreignField: "customer_id", as: "orders" } },
   { $project: { name: 1,
@@ -65,7 +65,7 @@ Both return: **Alice 3396.00, Bob 989.10 (at this point in the narrative),
 Carla 0**. This is the clearest gap in this whole lesson — SQL's version
 reads in one pass; MongoDB's needs `$reduce`/`$concatArrays`/`$map` just to
 flatten nested arrays across documents before it can even sum them. This is
-the direct cost of [Lesson 3.12](../03-document-db/12-embedding-vs-referencing.md)'s
+the direct cost of [3.13](../03-document-db/13-embedding-vs-referencing.md)'s
 embedding choice — cheap for reading one order, expensive for aggregating
 across many.
 
@@ -76,7 +76,7 @@ across many.
 SELECT category, AVG(price) AS avg_price FROM products GROUP BY category;
 ```
 ```js
-// MongoDB (Lesson 3.11)
+// MongoDB (Lesson 3.12)
 db.products.aggregate([
   { $group: { _id: "$category", avg_price: { $avg: "$price" } } }
 ]);

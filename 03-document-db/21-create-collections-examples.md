@@ -1,6 +1,6 @@
-← [3.19 Views](19-views.md)
+← [3.20 Views](20-views.md)
 
-# 3.20 Create Collections: More Examples
+# 3.21 Create Collections: More Examples
 
 Same idea as [Lesson 2.17](../02-sql/09-table-management.md) — more
 practice with fresh domains, plus a couple of capabilities SQL has no
@@ -28,7 +28,7 @@ db.tasks.insertMany([
 ]);
 ```
 
-Same `enum` pattern as [Lesson 3.16](16-schema-validation.md) standing in
+Same `enum` pattern as [3.17](17-schema-validation.md) standing in
 for SQL's `CHECK (priority IN (...))`.
 
 ## Step 2 — A fresh domain: a small blog
@@ -119,4 +119,4 @@ created_at < ...` needed.
 | TTL index (SQL has no equivalent) | Step 5 |
 
 ---
-← [3.19 Views](19-views.md) | Next: [3.21 User & Access Management →](21-user-access-management.md)
+← [3.20 Views](20-views.md) | Next: [3.22 User & Access Management →](22-user-access-management.md)

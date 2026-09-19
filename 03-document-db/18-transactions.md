@@ -1,6 +1,6 @@
-← [3.16 Schema Validation](16-schema-validation.md)
+← [3.17 Schema Validation](17-schema-validation.md)
 
-# 3.17 Transactions
+# 3.18 Transactions
 
 Same 3 scenarios as [Lesson 2.14](../02-sql/17-transactions.md) — a bank
 transfer, an airline booking, a shop checkout — all needing several writes
@@ -8,7 +8,7 @@ to succeed together, or not at all.
 
 ## Step 1 — The good news first: single documents are already atomic
 
-Because [Lesson 3.12](12-embedding-vs-referencing.md) embedded `items`
+Because [3.13](13-embedding-vs-referencing.md) embedded `items`
 directly inside each order, **inserting one whole order — items and all —
 is already a single, atomic write**, with no transaction needed at all. This
 is a genuine MongoDB strength: a well-embedded document sidesteps the
@@ -57,7 +57,7 @@ try {
 } catch (e) {
   print("Transaction aborted:", e.message);
   // Document failed validation — stock would go negative,
-  // violating Lesson 3.16's "minimum: 0" rule
+  // violating Lesson 3.17's "minimum: 0" rule
   session.abortTransaction();
 }
 ```
@@ -154,4 +154,4 @@ guard.
 | Multi-statement atomicity | Needed for multi-*document* writes; a single document is already atomic |
 
 ---
-← [3.16 Schema Validation](16-schema-validation.md) | Next: [3.18 Indexes & Performance →](18-indexes-and-performance.md)
+← [3.17 Schema Validation](17-schema-validation.md) | Next: [3.19 Indexes & Performance →](19-indexes-and-performance.md)

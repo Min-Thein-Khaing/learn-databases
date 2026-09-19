@@ -1,6 +1,6 @@
-← [3.17 Transactions](17-transactions.md)
+← [3.18 Transactions](18-transactions.md)
 
-# 3.18 Indexes & Performance
+# 3.19 Indexes & Performance
 
 Same 3 scenarios as [Lesson 2.15](../02-sql/18-indexes-and-performance.md) —
 a search engine, a shop's product search, a hospital's emergency lookup, all
@@ -85,4 +85,4 @@ MongoDB has to keep it up to date too.
 | Composite index, column order matters | Compound index, field order matters, same rule |
 
 ---
-← [3.17 Transactions](17-transactions.md) | Next: [3.19 Views →](19-views.md)
+← [3.18 Transactions](18-transactions.md) | Next: [3.20 Views →](20-views.md)

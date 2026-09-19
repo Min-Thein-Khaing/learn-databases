@@ -1,6 +1,6 @@
-← [3.11 The `$group` Stage](11-group-stage.md)
+← [3.12 The `$group` Stage](12-group-stage.md)
 
-# 3.12 Embedding vs. Referencing
+# 3.13 Embedding vs. Referencing
 
 [Lesson 2.9](../02-sql/12-normalization.md) split one flat table into 4,
 specifically to eliminate 3 anomalies. MongoDB doesn't force that split —
@@ -24,7 +24,7 @@ choose, for each relationship, between:
 - **Embedding** — nest the related data directly inside the parent document.
 - **Referencing** — store just an ID, and look the related document up
   separately (MongoDB's version of a foreign key, but never enforced by the
-  database itself — see [Lesson 3.13](13-relationships-in-mongodb.md)).
+  database itself — see [3.14](14-relationships-in-mongodb.md)).
 
 ## Step 3 — Embedding, done safely: order items
 
@@ -125,4 +125,4 @@ flowchart LR
 | Rule of thumb | "The key, the whole key, and nothing but the key" | "Embed what's always-together, bounded, and unshared; reference everything else" |
 
 ---
-← [3.11 The `$group` Stage](11-group-stage.md) | Next: [3.13 Relationships in MongoDB →](13-relationships-in-mongodb.md)
+← [3.12 The `$group` Stage](12-group-stage.md) | Next: [3.14 Relationships in MongoDB →](14-relationships-in-mongodb.md)

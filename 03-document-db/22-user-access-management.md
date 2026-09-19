@@ -1,6 +1,6 @@
-← [3.20 Create Collections: More Examples](20-create-collections-examples.md)
+← [3.21 Create Collections: More Examples](21-create-collections-examples.md)
 
-# 3.21 User & Access Management
+# 3.22 User & Access Management
 
 Same distinction as [Lesson 2.18](../02-sql/11-user-permission-management.md) —
 an application-level "user" (a document in a `customers` collection) is just
@@ -101,4 +101,4 @@ db.dropUser("analyst");
 | `DROP ROLE` | `db.dropUser()` |
 
 ---
-← [3.20 Create Collections: More Examples](20-create-collections-examples.md) | Next: [3.22 Capstone →](22-capstone.md)
+← [3.21 Create Collections: More Examples](21-create-collections-examples.md) | Next: [3.23 Capstone →](23-capstone.md)

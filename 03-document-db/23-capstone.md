@@ -1,13 +1,13 @@
-← [3.21 User & Access Management](21-user-access-management.md)
+← [3.22 User & Access Management](22-user-access-management.md)
 
-# 3.22 Capstone: Product Reviews
+# 3.23 Capstone: Product Reviews
 
 The exact same feature as [Lesson 2.19](../02-sql/20-capstone.md) — product
 reviews — rebuilt with everything from Part 2.
 
 ## Step 1 — Design: embed, or reference?
 
-Applying [Lesson 3.12](12-embedding-vs-referencing.md)'s decision rule:
+Applying [3.13](13-embedding-vs-referencing.md)'s decision rule:
 reviews are **not** bounded (a popular product could have thousands) and are
 often queried **independently** of a specific product (e.g., "show all of
 Alice's reviews"). Both point the same direction as
@@ -57,7 +57,7 @@ try {
 ## Step 4 — Add the index (Indexes & Performance)
 
 Already added in Step 2 — `{ customer_id: 1, product_id: 1 }` serves both as
-the uniqueness guarantee *and* the index [Lesson 3.18](18-indexes-and-performance.md)
+the uniqueness guarantee *and* the index [3.19](19-indexes-and-performance.md)
 would otherwise ask you to add manually for `product_id` lookups.
 
 ## Step 5 — Per-product ratings (`$lookup` + `$group`)
@@ -152,7 +152,7 @@ db.products.aggregate([
 **Identical result to SQL** — but notice what it took: 2 correlated
 sub-pipeline `$lookup`s, a `$facet` to compute two overall averages
 alongside the per-product data, and a final `$filter` to bring it together.
-This is the same honest tradeoff from [Lesson 3.14](14-lookup-joins.md):
+This is the same honest tradeoff from [3.15](15-lookup-joins.md):
 MongoDB handles "fetch one document with everything it needs" beautifully;
 cross-document analytical questions like this one lean on more, and more
 advanced, pipeline machinery than SQL's equivalent CTE.
@@ -161,7 +161,7 @@ advanced, pipeline machinery than SQL's equivalent CTE.
 
 ```js
 db.grantRolesToUser("app_user", [
-  { role: "orderProcessor", db: "apple_store" }   // from Lesson 3.21
+  { role: "orderProcessor", db: "apple_store" }   // from Lesson 3.22
 ]);
 db.createRole({
   role: "reviewWriter",
@@ -175,4 +175,4 @@ No `update`/`remove` granted — reviews are immutable once posted, same rule
 as [Lesson 2.19](../02-sql/20-capstone.md).
 
 ---
-← [3.21 User & Access Management](21-user-access-management.md) | Next: [3.23 Part 2 Conclusion →](23-conclusion.md)
+← [3.22 User & Access Management](22-user-access-management.md) | Next: [3.24 Document Databases Conclusion →](24-conclusion.md)

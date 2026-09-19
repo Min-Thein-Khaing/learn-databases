@@ -1,14 +1,14 @@
-← [3.23 Part 2 Conclusion](23-conclusion.md)
+← [3.24 Document Databases Conclusion](24-conclusion.md)
 
-# Task 1: Write the Queries — Lessons 3.4–3.14
+# Task 1: Write the Queries — Lessons 3.6–3.15
 
 15 practice tasks covering [3.4 What Is MongoDB?](04-what-is-mongodb.md)
-through [3.14 `$lookup` (Joining Collections)](14-lookup-joins.md). Write the
+through [3.15 `$lookup` (Joining Collections)](15-lookup-joins.md). Write the
 MongoDB shell code yourself first — the answer is hidden in each collapsed
 **Show answer** section below it. All tasks use the `apple_store` database
 built up across those lessons: the `products` collection (ending at 8
-documents after Lesson 3.5's deletes), plus `customers` and `orders` from
-Lessons 3.12–3.14. Tasks 11–15 are an extra round, all against the 8-document
+documents after Lesson 3.6's deletes), plus `customers` and `orders` from
+Lessons 3.13–3.15. Tasks 11–15 are an extra round, all against the 8-document
 `products` collection, combining searching, filtering, sorting, and grouping
 in one pipeline each — the way a real report actually looks.
 
@@ -17,7 +17,7 @@ in one pipeline each — the way a real report actually looks.
 ### Task 1 — CRUD basics
 
 Using the `products` collection from
-[3.5 Your First Database](05-your-first-database-apple-example.md):
+[3.6 Your First Database](06-your-first-database-apple-example.md):
 
 1. Insert a new product: `_id: 12`, `'iPhone Air'`, category `'smartphone'`, price `999.00`, stock `450`.
 2. Find the `name` and `price` of every product in the `'audio'` category.
@@ -58,7 +58,7 @@ operator) — MongoDB never lets you just assign a field directly.
 ### Task 2 — Naming the operation category
 
 For each line below, name which of the 5 categories from
-[3.6 Types of MongoDB Operations](06-types-of-mongodb-operations.md) it
+[3.7 Types of MongoDB Operations](07-types-of-mongodb-operations.md) it
 belongs to (collection/index management, CRUD write, query/aggregation,
 user/role management, or transaction):
 
@@ -84,7 +84,7 @@ Write an `insertOne` for a `customers` collection with: an auto-generated
 unique id, a required `name`, a unique required `email` (backed by an
 index), an optional `phone`, and a boolean `is_verified` set to `false`.
 Use the right BSON approach for each, from
-[3.7 Data Types in MongoDB](07-data-types.md).
+[3.8 Data Types in MongoDB](08-data-types.md).
 
 <details>
 <summary>Show answer</summary>
@@ -104,7 +104,7 @@ db.customers.createIndex({ email: 1 }, { unique: true });
 the `ObjectId` equivalent of SQL's `SERIAL`; `phone` is simply omitted, not
 set to `null`; and since MongoDB has no `DEFAULT` the way SQL does,
 `is_verified` must be supplied explicitly by the application, exactly like
-`created_at` was in [3.5 Your First Database](05-your-first-database-apple-example.md).
+`created_at` was in [3.6 Your First Database](06-your-first-database-apple-example.md).
 </details>
 
 ---
@@ -112,7 +112,7 @@ set to `null`; and since MongoDB has no `DEFAULT` the way SQL does,
 ### Task 4 — Filtering with query operators
 
 Against the 8-document `products` collection from
-[3.8 Query Operators](08-query-operators.md), write one query for each:
+[3.9 Query Operators](09-query-operators.md), write one query for each:
 
 1. Every product priced between `500` and `1000`, inclusive.
 2. Every product whose category is `'laptop'` or `'tablet'`.
@@ -148,7 +148,7 @@ mixed-operator care SQL's parentheses required.
 
 ### Task 5 — Sort, limit, skip
 
-From [3.9 Sort, Limit, Skip](09-sort-limit-skip.md):
+From [3.10 Sort, Limit, Skip](10-sort-limit-skip.md):
 
 1. List every product's `name` and `price`, most expensive first.
 2. Return only the 3 cheapest products, breaking ties by `_id` ascending.
@@ -176,7 +176,7 @@ next 3 (`.limit(3)`).
 
 ### Task 6 — Aggregation functions
 
-From [3.10 Aggregation Functions](10-aggregation-functions.md):
+From [3.11 Aggregation Functions](11-aggregation-functions.md):
 
 1. Count how many products exist in total, and find their average price, rounded to 2 decimal places.
 2. Show every product's name in uppercase, alongside its category.
@@ -208,7 +208,7 @@ db.products.aggregate([
 
 ### Task 7 — The `$group` stage
 
-From [3.11 The `$group` Stage](11-group-stage.md):
+From [3.12 The `$group` Stage](12-group-stage.md):
 
 1. Show the number of products and total stock, per category.
 2. Show only the categories where the average price is above `700`.
@@ -241,7 +241,7 @@ listed in `GROUP BY` (and not wrapped in an aggregate) causes an error.
 ### Task 8 — Embed or reference?
 
 Using the decision rule from
-[3.12 Embedding vs. Referencing](12-embedding-vs-referencing.md), decide
+[3.13 Embedding vs. Referencing](13-embedding-vs-referencing.md), decide
 **embed** or **reference** for each, and justify it with the 3-question rule:
 
 1. An order's line items (`items: [...]`).
@@ -256,14 +256,14 @@ other order.
 2. **Reference** — a separate `reviews` collection. Reviews are **not**
 bounded (a popular product could have thousands) and are frequently queried
 **independently** of any one product — both answers point away from
-embedding, the same conclusion [3.22 Capstone](22-capstone.md) reaches.
+embedding, the same conclusion [3.23 Capstone](23-capstone.md) reaches.
 </details>
 
 ---
 
 ### Task 9 — Relationships without enforcement
 
-From [3.13 Relationships in MongoDB](13-relationships-in-mongodb.md):
+From [3.14 Relationships in MongoDB](14-relationships-in-mongodb.md):
 
 1. Insert an order referencing `customer_id: 9999`, a customer that doesn't exist, and show that it succeeds.
 2. Delete a customer who still has orders referencing them, and show that this succeeds too.
@@ -285,7 +285,7 @@ db.customers.deleteOne({ _id: 1 });
 ```
 
 3. **Application-level checks** — look up the customer before inserting the
-order, in your own code. **Schema validation** ([3.16](16-schema-validation.md))
+order, in your own code. **Schema validation** ([3.17](17-schema-validation.md))
 — can enforce a field's type and shape, but never that its value exists in
 another collection.
 </details>
@@ -294,7 +294,7 @@ another collection.
 
 ### Task 10 — `$lookup` joins
 
-From [3.14 `$lookup`](14-lookup-joins.md):
+From [3.15 `$lookup`](15-lookup-joins.md):
 
 1. Write a pipeline returning every order's `_id`, the customer's `name`, and the `order_date`.
 2. Write a pipeline listing every customer's `name` and total number of orders placed — including customers with **zero** orders, showing `0` instead of nothing.
@@ -339,8 +339,8 @@ db.products.find({ name: { $regex: "iPhone" }, price: { $lt: 1200 } })
 
 `$regex` searches the name, the two fields in the filter object form an
 implicit `$and`, and the 2-field `.sort()` breaks any tie — exactly the 3
-skills from [3.8 Query Operators](08-query-operators.md) and
-[3.9 Sort, Limit, Skip](09-sort-limit-skip.md), combined in one query.
+skills from [3.9 Query Operators](09-query-operators.md) and
+[3.10 Sort, Limit, Skip](10-sort-limit-skip.md), combined in one query.
 </details>
 
 ---
@@ -360,7 +360,7 @@ db.products.find(
 ).sort({ price: -1 }).limit(3);
 ```
 
-Same logical pipeline as [3.9 Sort, Limit, Skip, Step 4](09-sort-limit-skip.md):
+Same logical pipeline as [3.10 Sort, Limit, Skip, Step 4](10-sort-limit-skip.md):
 the filter runs first, the sort orders what's left, then `.limit()` takes
 just the top slice.
 </details>
@@ -389,7 +389,7 @@ Returns `smartphone` (1124.00) and `tablet` (799.00). The first `$match`
 removes individual documents before grouping ever happens; the second
 `$match` then filters the *groups* by their computed average — MongoDB's
 version of the `WHERE` vs. `HAVING` distinction from
-[3.11 The `$group` Stage, Step 5](11-group-stage.md).
+[3.12 The `$group` Stage, Step 5](12-group-stage.md).
 </details>
 
 ---
@@ -443,11 +443,11 @@ avgPrice 1124.00): the search + filter stage keeps iPhone 17 Pro, iPhone 17,
 and iPad Pro (iPad Air is filtered out at 599.00, not above 600); grouping
 puts 2 of those 3 in `smartphone` and 1 in `tablet`; the `numProducts > 1`
 match then drops `tablet`. Read it as MongoDB's own execution order, from
-[3.8 Query Operators](08-query-operators.md) and
-[3.11 The `$group` Stage, Step 5](11-group-stage.md): `$match` (search +
+[3.9 Query Operators](09-query-operators.md) and
+[3.12 The `$group` Stage, Step 5](12-group-stage.md): `$match` (search +
 filter) → `$group` → `$match` (having) → `$sort` — every stage from this
 lesson block, in one pipeline.
 </details>
 
 ---
-← [3.23 Part 2 Conclusion](23-conclusion.md) | Next: [Task 2 →](25-task-2.md)
+← [3.24 Document Databases Conclusion](24-conclusion.md) | Next: [Task 2 →](26-task-2.md)

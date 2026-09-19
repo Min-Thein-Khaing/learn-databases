@@ -9,8 +9,8 @@ not abstract claims.
 
 | | SQL | MongoDB |
 |---|---|---|
-| Foreign keys enforced? | Yes ([Lesson 2.13](../02-sql/13-relationships-and-foreign-keys.md)) | **No** ([Lesson 3.13](../03-document-db/13-relationships-in-mongodb.md)) |
-| Type/shape rules enforced? | Yes, always (column types) | Only if you add `$jsonSchema` validation ([Lesson 3.16](../03-document-db/16-schema-validation.md)) |
+| Foreign keys enforced? | Yes ([Lesson 2.13](../02-sql/13-relationships-and-foreign-keys.md)) | **No** ([3.14](../03-document-db/14-relationships-in-mongodb.md)) |
+| Type/shape rules enforced? | Yes, always (column types) | Only if you add `$jsonSchema` validation ([3.17](../03-document-db/17-schema-validation.md)) |
 | `DEFAULT` values | Server-enforced | **No equivalent** — the app must supply every value |
 | **Verdict** | Stronger guarantees, by default | Guarantees are opt-in, and some (FK) aren't available at all |
 
@@ -27,7 +27,7 @@ not abstract claims.
 | | SQL | MongoDB |
 |---|---|---|
 | Fetch one entity + its immediate details | `JOIN` | Often a single document read (if embedded) |
-| Aggregate across many related records | `JOIN` + `GROUP BY`, one pass ([Lesson 2.14](../02-sql/14-joins.md)) | `$lookup` + `$reduce`/`$map`, more steps ([Lesson 3.14](../03-document-db/14-lookup-joins.md)) |
+| Aggregate across many related records | `JOIN` + `GROUP BY`, one pass ([Lesson 2.14](../02-sql/14-joins.md)) | `$lookup` + `$reduce`/`$map`, more steps ([3.15](../03-document-db/15-lookup-joins.md)) |
 | Recursive/hierarchical data | `WITH RECURSIVE` | `$graphLookup` — both handle it, similar effort |
 | **Verdict** | Better at cross-record questions | Better at "fetch one whole thing" questions |
 
@@ -36,7 +36,7 @@ not abstract claims.
 | | SQL | MongoDB |
 |---|---|---|
 | Single-row/document write | Atomic | Atomic |
-| Multi-row/document write | Full transaction support, with `SAVEPOINT` | Full transaction support, **no** `SAVEPOINT` ([Lesson 3.17](../03-document-db/17-transactions.md)) |
+| Multi-row/document write | Full transaction support, with `SAVEPOINT` | Full transaction support, **no** `SAVEPOINT` ([3.18](../03-document-db/18-transactions.md)) |
 | **Verdict** | Slightly more complete transaction toolkit | Comparable for the common case; embedding often avoids needing one at all |
 
 ## Scaling

@@ -1,6 +1,6 @@
-← [3.15 Aggregation Pipelines](15-aggregation-pipelines.md)
+← [3.16 Aggregation Pipelines](16-aggregation-pipelines.md)
 
-# 3.16 Schema Validation
+# 3.17 Schema Validation
 
 Same 3 scenarios as [Lesson 2.13](../02-sql/16-constraints.md) — a bank that
 must never allow a negative balance, a hospital that must never allow
@@ -19,7 +19,7 @@ db.products.insertOne({ _id: 1, name: "Duplicate!" });
 
 ## Step 2 — Foreign keys: already covered, still not enforced
 
-[Lesson 3.13](13-relationships-in-mongodb.md) already showed this gap in
+[3.14](14-relationships-in-mongodb.md) already showed this gap in
 full — nothing here changes it. Schema validation (below) can check a
 field's *type*, but never that its value exists in another collection.
 
@@ -65,7 +65,7 @@ Same fix as [Lesson 2.13](../02-sql/16-constraints.md)'s retroactive
 `ALTER TABLE ... ADD CONSTRAINT` — `collMod` adds validation to a collection
 that already exists, closing the exact same "nothing stops a negative price"
 gap MongoDB's `products` collection has had since
-[Lesson 3.5](05-your-first-database-apple-example.md).
+[3.6](06-your-first-database-apple-example.md).
 
 `enum` here also functions as a `CHECK (category IN (...))` equivalent —
 restricting `category` to a fixed, known list.
@@ -82,7 +82,7 @@ present. But note what's **missing** compared to
 [Lesson 2.13](../02-sql/16-constraints.md): there's no MongoDB equivalent of
 SQL's `DEFAULT`. A field with no default fills in at the database level in
 PostgreSQL; in MongoDB, *your application code* has to supply every field's
-value at insert time (exactly what [Lesson 3.5](05-your-first-database-apple-example.md)
+value at insert time (exactly what [3.6](06-your-first-database-apple-example.md)
 did manually with `created_at: new Date()`).
 
 ## Step 6 — Recap
@@ -90,7 +90,7 @@ did manually with `created_at: new Date()`).
 | SQL ([Lesson 2.13](../02-sql/16-constraints.md)) | MongoDB |
 |---|---|
 | `PRIMARY KEY` | `_id`, unique automatically |
-| `FOREIGN KEY` | **No equivalent** — not enforced (Lesson 3.13) |
+| `FOREIGN KEY` | **No equivalent** — not enforced (Lesson 3.14) |
 | `UNIQUE` | `createIndex({ field: 1 }, { unique: true })` |
 | `CHECK` | `$jsonSchema` validator (`minimum`, `maximum`, `enum`, ...) |
 | `NOT NULL` | `required: [...]` in the validator |
@@ -98,4 +98,4 @@ did manually with `created_at: new Date()`).
 | Composite `PRIMARY KEY` | A compound unique index across multiple fields |
 
 ---
-← [3.15 Aggregation Pipelines](15-aggregation-pipelines.md) | Next: [3.17 Transactions →](17-transactions.md)
+← [3.16 Aggregation Pipelines](16-aggregation-pipelines.md) | Next: [3.18 Transactions →](18-transactions.md)

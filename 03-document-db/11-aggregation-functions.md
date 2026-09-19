@@ -1,6 +1,6 @@
-← [3.9 Sort, Limit, Skip](09-sort-limit-skip.md)
+← [3.10 Sort, Limit, Skip](10-sort-limit-skip.md)
 
-# 3.10 Aggregation Functions
+# 3.11 Aggregation Functions
 
 Same idea as [Lesson 2.7](../02-sql/07-functions.md) — computing something
 from stored data, not just retrieving it as-is. In MongoDB, these live
@@ -113,4 +113,4 @@ the first non-null/non-missing value.
 | `COALESCE` | `$ifNull` |
 
 ---
-← [3.9 Sort, Limit, Skip](09-sort-limit-skip.md) | Next: [3.11 The `$group` Stage →](11-group-stage.md)
+← [3.10 Sort, Limit, Skip](10-sort-limit-skip.md) | Next: [3.12 The `$group` Stage →](12-group-stage.md)
