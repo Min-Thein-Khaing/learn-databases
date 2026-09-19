@@ -9,6 +9,7 @@ how they are hosted, queried, scaled, and priced.
 |---|---|
 | **MongoDB** | General-purpose document database with a large ecosystem and a managed cloud service called Atlas |
 | **Amazon DocumentDB** | AWS-managed document database designed for compatibility with MongoDB workloads |
+| **Amazon DynamoDB** | Serverless, fully managed, distributed key-value and document database with single-digit millisecond performance at any scale |
 | **Azure Cosmos DB** | Globally distributed cloud database that supports a document data model and multiple APIs |
 | **Google Cloud Firestore** | Serverless document database commonly used by web and mobile applications |
 | **Couchbase** | Distributed JSON document database with caching, search, and mobile features |
@@ -34,4 +35,4 @@ same thing.
 - The rest of this module uses MongoDB for hands-on practice.
 
 ---
-← [3.1 What Is a Document Database?](01-what-is-a-document-database.md) | Next: [3.3 What Is JSON? →](03-what-is-json.md)
+← [3.1 What Is a Document Database?](01-what-is-a-document-database.md) | Next: [3.3 What Is BSON? →](03-what-is-bson.md)

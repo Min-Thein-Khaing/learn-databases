@@ -1,4 +1,4 @@
-← [3.3 What Is JSON?](03-what-is-json.md)
+← [3.3 What Is BSON?](03-what-is-bson.md)
 
 # 3.4 What Is MongoDB?
 
@@ -23,7 +23,7 @@ production database with millions of rows.
 
 ## What MongoDB actually is
 
-MongoDB stores data as **documents** — JSON-like structures — grouped into
+MongoDB stores data as **BSON documents** grouped into
 **collections**, instead of rows grouped into tables. Unlike SQL
 ([Lesson 2.1](../02-sql/01-what-is-sql.md)), there's no separate "language
 vs. database" split: MongoDB's query syntax **is** MongoDB — there's no
@@ -32,7 +32,7 @@ MongoDB equivalent of "the same language also runs on 4 other brands."
 ```mermaid
 flowchart LR
     A[You / an app] -->|"db.products.find({...})"| B[(MongoDB)]
-    B -->|"documents (JSON-like)"| C[Result]
+    B -->|"BSON documents"| C[Result]
     C --> A
 ```
 
@@ -63,11 +63,11 @@ gaining) by being flexible instead.
 
 ## Recap
 
-- MongoDB stores **documents** (JSON-like) in **collections** — not rows in tables.
+- MongoDB stores **BSON documents** in **collections** — not rows in tables.
 - Data can nest directly inside a document — no automatic normalization the
   way SQL enforces.
 - The concepts from Part 1 (filter, sort, group, index, transaction) all
   return here, just with different syntax and different tradeoffs.
 
 ---
-← [3.3 What Is JSON?](03-what-is-json.md) | Next: [3.5 Your First Database →](05-your-first-database-apple-example.md)
+← [3.3 What Is BSON?](03-what-is-bson.md) | Next: [3.5 Your First Database →](05-your-first-database-apple-example.md)

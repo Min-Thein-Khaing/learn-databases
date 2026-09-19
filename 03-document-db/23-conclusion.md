@@ -3,15 +3,15 @@
 # 3.23 Document Databases Conclusion
 
 Module 3 is done. You started with the document model, explored major
-document database brands and JSON, and then built a complete MongoDB system.
+document database brands and BSON, and then built a complete MongoDB system.
 
 ## What you've learned
 
 | Lesson | Big idea |
 |---|---|
 | [3.1 What Is a Document Database?](01-what-is-a-document-database.md) | Documents, collections, nested data, and flexible structure |
-| [3.2 Document Database Brands](02-document-database-brands.md) | MongoDB, Amazon DocumentDB, Cosmos DB, Firestore, Couchbase, and CouchDB |
-| [3.3 What Is JSON?](03-what-is-json.md) | Objects, arrays, value types, nesting, and JSON syntax |
+| [3.2 Document Database Brands](02-document-database-brands.md) | MongoDB, Amazon DocumentDB, DynamoDB, Cosmos DB, Firestore, Couchbase, and CouchDB |
+| [3.3 What Is BSON?](03-what-is-bson.md) | MongoDB documents, embedded values, and BSON data types |
 | [3.4 What Is MongoDB?](04-what-is-mongodb.md) | Documents in collections, not rows in tables — no separate query language layer |
 | [3.5 Your First Database](05-your-first-database-apple-example.md) | `insertOne`/`insertMany`/`find`/`updateOne`/`deleteOne` — same data as Part 1's end-state |
 | [3.6 Types of MongoDB Operations](06-types-of-mongodb-operations.md) | The same 5 SQL categories, mapped to MongoDB's own tools |

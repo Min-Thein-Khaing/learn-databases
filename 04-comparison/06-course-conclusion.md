@@ -12,7 +12,7 @@ line. That's the whole course. Here's the full shape of it.
 |---|---|---|
 | **Module 1** | Fundamentals — what data is, database types, brands, setup | [1.8 Module 1 Conclusion](../01-fundamentals/08-conclusion.md) |
 | **Part 1** | SQL, with PostgreSQL — 21 lessons, a full multi-table system | [2.21 Part 1 Conclusion](../02-sql/21-conclusion.md) |
-| **Module 3** | Document databases, JSON, and a complete MongoDB system | [3.23 Document Databases Conclusion](../03-document-db/23-conclusion.md) |
+| **Module 3** | Document databases, BSON, and a complete MongoDB system | [3.23 Document Databases Conclusion](../03-document-db/23-conclusion.md) |
 | **Chapter 4** | Direct comparison, pros/cons, and how to decide | This module |
 
 ## The one idea underneath everything
