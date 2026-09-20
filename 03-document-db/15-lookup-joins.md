@@ -258,7 +258,67 @@ Same result as [Lesson 2.11](../02-sql/14-joins.md)'s SQL join. Each
 `order_items` document already represents one line item, so the pipeline
 joins it to its order, customer, and product.
 
-## Step 7 — Bonus: total spent per customer
+## Step 7 — Join customers, orders, order items, and products
+
+This pipeline follows the complete relationship chain:
+`customers → orders → order_items → products`.
+
+```js
+db.customers.aggregate([
+  {
+    $lookup: {
+      from: "orders",
+      localField: "_id",
+      foreignField: "customer_id",
+      as: "orders"
+    }
+  },
+  { $unwind: { path: "$orders", preserveNullAndEmptyArrays: true } },
+  {
+    $lookup: {
+      from: "order_items",
+      localField: "orders._id",
+      foreignField: "order_id",
+      as: "item"
+    }
+  },
+  { $unwind: { path: "$item", preserveNullAndEmptyArrays: true } },
+  {
+    $lookup: {
+      from: "products",
+      localField: "item.product_id",
+      foreignField: "_id",
+      as: "product"
+    }
+  },
+  { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
+  {
+    $project: {
+      _id: 0,
+      customer: "$name",
+      order_id: "$orders._id",
+      order_date: "$orders.order_date",
+      product: "$product.name",
+      quantity: "$item.quantity",
+      unit_price: "$item.unit_price"
+    }
+  }
+]);
+```
+
+The relationship chain is one-to-many at every step:
+
+- One customer can have many orders.
+- One order can have many `order_items` documents.
+- Each `order_items` document references one product.
+
+Each `$unwind` turns the matching array into individual output documents, so
+one customer appears once for every order item. Put `{ $match: { _id: 1 } }`
+first to return only Alice's orders.
+`preserveNullAndEmptyArrays: true` keeps customers without orders and orders
+without line items or matching products.
+
+## Step 8 — Bonus: total spent per customer
 
 ```js
 db.customers.aggregate([
