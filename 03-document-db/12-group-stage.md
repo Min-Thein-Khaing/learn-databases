@@ -59,8 +59,21 @@ into the output.
 
 ## Step 4 — Filtering groups: the `HAVING` equivalent
 
-MongoDB has no separate `HAVING` keyword — you just add another `$match`
-stage **after** `$group`:
+Before using it, remember:
+
+> **`$match` is a filter.** It keeps documents that satisfy a condition and
+> removes documents that do not.
+
+It uses the same condition syntax as `find()`:
+
+```js
+{ $match: { category: "laptop" } }
+{ $match: { price: { $gt: 1000 } } }
+{ $match: { stock: { $gte: 10, $lte: 100 } } }
+```
+
+MongoDB has no separate `HAVING` keyword. To filter grouped results, place
+`$match` **after** `$group`:
 
 ```js
 db.products.aggregate([
@@ -68,6 +81,46 @@ db.products.aggregate([
   { $match: { numProducts: { $gt: 1 } } }
 ]);
 ```
+
+Now walk through that pipeline. The stages run in order.
+
+First, `$group` produces documents like these:
+
+```js
+{ _id: "smartphone", numProducts: 2 }
+{ _id: "laptop", numProducts: 2 }
+{ _id: "audio", numProducts: 1 }
+```
+
+Then `$match` checks the new `numProducts` field:
+
+```js
+{ $match: { numProducts: { $gt: 1 } } }
+```
+
+- `numProducts` is the field to check.
+- `$gt` means “greater than.”
+- `1` is the comparison value.
+
+The `audio` document is removed because `1` is not greater than `1`. The
+smartphone and laptop documents continue because each has 2 products.
+
+### Position changes what `$match` filters
+
+Before `$group`, `$match` filters the original product documents:
+
+```js
+{ $match: { price: { $gt: 500 } } }
+```
+
+After `$group`, `$match` filters the newly created group documents:
+
+```js
+{ $match: { numProducts: { $gt: 1 } } }
+```
+
+The field used by `$match` must exist at that point in the pipeline.
+
 | _id | numProducts |
 |---|---|
 | smartphone | 2 |

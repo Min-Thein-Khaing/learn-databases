@@ -7,6 +7,116 @@ from stored data, not just retrieving it as-is. In MongoDB, these live
 inside an **aggregation pipeline** — a list of processing stages a
 collection's documents flow through.
 
+## Before starting: `$match`, `$group`, and `$project`
+
+These are **aggregation pipeline stages**:
+
+```text
+documents → $match → $group → $project → result
+```
+
+- **`$match`** filters documents. Only matching documents continue.
+- **`$group`** combines several input documents and calculates values such
+  as a count, total, or average.
+- **`$project`** chooses, removes, renames, or calculates fields in each
+  output document.
+
+For example:
+
+```js
+{ $match: { category: "laptop" } }
+```
+
+keeps laptop documents and removes all other documents from the pipeline.
+Stages are optional: a pipeline uses only the stages needed for its task.
+
+Consider this pipeline:
+
+```js
+db.products.aggregate([
+  { $group: { _id: null, avgPrice: { $avg: "$price" } } },
+  { $project: { _id: 0, average_price: { $round: ["$avgPrice", 2] } } }
+])
+```
+
+Read the `$group` stage from the inside out:
+
+```js
+{
+  $group: {                       // combine documents into groups
+    _id: null,                    // put every document in one group
+    avgPrice: {                   // name the calculated result avgPrice
+      $avg: "$price"              // average the price field
+    }
+  }
+}
+```
+
+If the input is:
+
+```js
+{ name: "Mouse", price: 20 }
+{ name: "Keyboard", price: 40 }
+{ name: "Monitor", price: 300 }
+```
+
+the `$group` stage produces one document:
+
+```js
+{ _id: null, avgPrice: 120 }
+```
+
+Then `$project` reshapes that document:
+
+```js
+{
+  $project: {
+    _id: 0,                                   // hide the _id field
+    average_price: { $round: ["$avgPrice", 2] } // calculate and rename
+  }
+}
+```
+
+The final result is:
+
+```js
+{ average_price: 120 }
+```
+
+### What does `_id` mean inside `$group`?
+
+Inside `$group`, `_id` defines the **grouping key**:
+
+```js
+_id: null         // one group containing every document
+_id: "$category"  // one group for each category
+_id: "$brand"     // one group for each brand
+```
+
+It does not mean the original document ID in this context.
+
+### Why are field names written as strings with `$`?
+
+```js
+"$price"     // read the price field from each input document
+"$avgPrice"  // read avgPrice from the previous stage's output
+```
+
+A quoted value beginning with `$` is a field path. Without `$`, `"price"`
+would be ordinary text.
+
+### Common `$project` forms
+
+```js
+{ $project: { name: 1, price: 1 } }                 // keep fields
+{ $project: { password: 0 } }                       // remove a field
+{ $project: { productName: "$name", price: 1 } }   // rename a field
+{ $project: { total: { $multiply: ["$price", "$stock"] } } } // calculate
+```
+
+`_id` is included by default. Add `_id: 0` when you do not want it in the
+result.
+
 ## Step 1 — Aggregate functions, summarizing the whole collection
 
 ```js
@@ -40,7 +150,7 @@ AVG(price) FROM products;` exactly, down to the same numbers.
 ```js
 db.products.aggregate([
   { $group: { _id: null, avgPrice: { $avg: "$price" } } },
-  { $project: { avgPrice: { $round: ["$avgPrice", 2] } } }
+  { $project: { _id: 0, avgPrice: { $round: ["$avgPrice", 2] } } }
 ]);
 ```
 ```
