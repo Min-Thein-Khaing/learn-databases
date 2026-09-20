@@ -117,6 +117,9 @@ would be ordinary text.
 `_id` is included by default. Add `_id: 0` when you do not want it in the
 result.
 
+For a categorized list, see the
+[MongoDB `$` Operators Reference](33-dollar-operators-reference.md).
+
 ## Step 1 — Aggregate functions, summarizing the whole collection
 
 ```js

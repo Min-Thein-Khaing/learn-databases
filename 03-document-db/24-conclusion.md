@@ -60,6 +60,10 @@ domains:
 - [Social media](30-social-media-diagram.md) — feed-ready posts, threaded comments, hashtags, and follow relationships
 - [IoT monitoring](32-iot-monitoring-diagram.md) — flexible device shapes, time-series readings, and operational alerts
 
+## Reference appendix
+
+- [MongoDB `$` Operators Reference](33-dollar-operators-reference.md) — query, update, projection, pipeline, expression, accumulator, and window operators
+
 ## What's next
 
 [**Chapter 4**](../04-comparison/) puts both parts side by side directly —

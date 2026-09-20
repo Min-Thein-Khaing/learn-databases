@@ -62,17 +62,107 @@ Returns MacBook Air, MacBook Pro, iPad Air, iPad Pro — same result as
 
 ## Step 4 — `$regex`: pattern matching on text
 
+A **regular expression**, often shortened to **regex**, is a pattern used to
+search text. MongoDB's `$regex` operator checks whether a string field
+matches that pattern.
+
+MongoDB accepts two common forms:
+
+```js
+db.products.find({ name: /Pro/ })
+db.products.find({ name: { $regex: "Pro" } })
+```
+
+Both find names containing `Pro`. The first uses a JavaScript regular
+expression literal. The second uses the explicit MongoDB `$regex` operator.
+
+### Basic regular-expression symbols
+
+| Pattern | Meaning | Example match |
+|---|---|---|
+| `Pod` | Contains `Pod` anywhere | `AirPods` |
+| `^Pod` | Starts with `Pod` | `Pods Max` |
+| `Pod$` | Ends with `Pod` | `HomePod` |
+| `.` | Any one character | `Pod`, `Rod` for `.od` |
+| `.*` | Any number of characters | `AirPods Pro` for `Air.*Pro` |
+| `[abc]` | One character from the set | `Pad` for `P[ao]d` |
+| `[0-9]` | One digit | `iPhone 17` |
+| `+` | One or more of the previous item | `100` for `[0-9]+` |
+| `?` | Zero or one of the previous item | `color`, `colour` for `colou?r` |
+| `\` | Escape a special character | `\.` matches a literal period |
+
+### SQL `LIKE` to MongoDB regex
+
+SQL's `%` means any number of characters. Regex uses `.*` for the same
+idea, although `.*` can often be omitted when matching anywhere. SQL's `_`
+means one character; regex uses `.`.
+
+| SQL | MongoDB |
+|---|---|
+| `WHERE name LIKE '%pod%'` | `{ name: /pod/ }` or `{ name: { $regex: "pod" } }` |
+| `WHERE name LIKE 'Pod%'` | `{ name: /^Pod/ }` |
+| `WHERE name LIKE '%Pod'` | `{ name: /Pod$/ }` |
+| `WHERE name LIKE '_od%'` | `{ name: /^.od/ }` |
+| `WHERE name LIKE '%pod%'` case-insensitive | `{ name: { $regex: "pod", $options: "i" } }` |
+
+### Start-of-text example
+
 ```js
 db.products.find({ name: { $regex: "^iPhone" } });
 ```
 Returns iPhone 17 Pro, iPhone 17 — `^` anchors to the start of the string,
 the regex equivalent of SQL's `LIKE 'iPhone%'`.
 
+### Contains-text example
+
 ```js
 db.products.find({ name: { $regex: "Pro" } });
 ```
 Returns iPhone 17 Pro, MacBook Pro, iPad Pro — matches "Pro" anywhere in the
 name, like SQL's `LIKE '%Pro%'`.
+
+### Case-insensitive matching
+
+Regular expressions are case-sensitive by default:
+
+```js
+db.products.find({ name: { $regex: "iphone" } });
+// Does not match "iPhone" because I and i are different.
+```
+
+Add the `i` option to ignore letter case:
+
+```js
+db.products.find({ name: { $regex: "iphone", $options: "i" } });
+```
+
+The literal form can place the option after the closing slash:
+
+```js
+db.products.find({ name: /iphone/i });
+```
+
+Common options are:
+
+| Option | Meaning |
+|---|---|
+| `i` | Case-insensitive matching |
+| `m` | `^` and `$` work at the start and end of each line |
+| `s` | `.` can also match newline characters |
+| `x` | Ignore unescaped whitespace and allow comments in the pattern |
+
+### Escaping user input
+
+Characters such as `.`, `*`, `+`, `?`, `(`, `)`, `[`, `]`, `{`, `}`, `^`,
+`$`, `|`, and `\` have special meanings. Escape them when they should be
+treated as ordinary text. Applications should never place untrusted user
+input directly into a regex without escaping or validating it.
+
+### Index note
+
+A case-sensitive prefix pattern such as `/^Pod/` can make useful use of a
+normal index on `name`. A pattern that begins with unrestricted text, such
+as `/pod/` or `/.*pod/`, usually requires much more scanning.
 
 ## Step 5 — `$exists`: checking for a missing field
 

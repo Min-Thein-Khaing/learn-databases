@@ -20,7 +20,7 @@ VS Code, and most Markdown viewers), plus rendered PNG charts in
 |---|---|---|
 | [01 — Fundamentals](01-fundamentals/) | 8 | What data is, database types, brands, installation (native + Docker), GUI tools |
 | [02 — SQL (PostgreSQL)](02-sql/) | 21 | A full relational system: CRUD, table management, the CLI, users, normalization, joins, transactions, indexes, capstone |
-| [03 — Document Databases](03-document-db/) | 24 + 3 examples | Document database concepts, BSON, `mongosh`, MongoDB, and three complete application models |
+| [03 — Document Databases](03-document-db/) | 24 + 3 examples + reference | Document database concepts, BSON, `mongosh`, MongoDB, three application models, and a `$` operator appendix |
 | [04 — Comparison](04-comparison/) | 6 | Same data and queries side by side, pros/cons, real-world scenarios, decision framework |
 
 59 lessons in total. Start at [Module 1, Lesson 1](01-fundamentals/01-what-is-data.md)
