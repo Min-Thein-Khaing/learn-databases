@@ -18,11 +18,12 @@ db.createView(
   "customers",
   [
     { $lookup: { from: "orders", localField: "_id", foreignField: "customer_id", as: "orders" } },
+    { $lookup: { from: "order_items", localField: "orders._id", foreignField: "order_id", as: "items" } },
     { $project: {
         name: 1,
         total_spent: {
           $sum: { $map: {
-            input: { $reduce: { input: "$orders.items", initialValue: [], in: { $concatArrays: ["$$value", "$$this"] } } },
+            input: "$items",
             as: "item",
             in: { $multiply: ["$$item.quantity", "$$item.unit_price"] }
           }}
@@ -63,7 +64,7 @@ collection — the multi-stage pipeline behind it stays hidden.
 
 Same reasons as [Lesson 2.16](../02-sql/19-views.md): consistency (one
 definition, used everywhere), simplicity (a teammate queries
-`customer_order_summary`, not the raw `$lookup`/`$reduce` pipeline), and
+`customer_order_summary`, not the raw `$lookup`/`$map` pipeline), and
 access control (a role can be granted read access to the view without
 touching the underlying collections — see [3.22](22-user-access-management.md)).
 

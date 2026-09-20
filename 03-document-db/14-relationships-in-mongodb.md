@@ -11,35 +11,45 @@ SQL foreign keys.
 
 ```js
 db.customers.insertMany([
-  { _id: 1, name: "Alice Chen", email: "alice@mail.com", city: "New York" },
-  { _id: 2, name: "Bob Diaz",   email: "bob@mail.com",   city: "Los Angeles" },
-  { _id: 3, name: "Carla Ruiz", email: "carla@mail.com", city: "Chicago" }
+  { _id: 1, name: "Alice Chen", email: "alice@mail.com",
+    phones: ["+1-212-555-0101", "+1-212-555-0199"],
+    addresses: [
+      { type: "home", street: "10 Main St", city: "New York", country: "US" },
+      { type: "work", street: "20 Park Ave", city: "New York", country: "US" }
+    ] },
+  { _id: 2, name: "Bob Diaz", email: "bob@mail.com",
+    phones: ["+1-310-555-0102"],
+    addresses: [ { type: "home", street: "5 Sunset Blvd", city: "Los Angeles", country: "US" } ] },
+  { _id: 3, name: "Carla Ruiz", email: "carla@mail.com",
+    phones: ["+1-312-555-0103"],
+    addresses: [ { type: "home", street: "8 Lake St", city: "Chicago", country: "US" } ] }
 ]);
 
 db.orders.insertMany([
-  { _id: 1, customer_id: 1, order_date: ISODate("2026-03-01"),
-    items: [ { product_id: 1, quantity: 1, unit_price: 1249.00 },
-             { product_id: 7, quantity: 1, unit_price: 549.00 } ] },
-  { _id: 2, customer_id: 2, order_date: ISODate("2026-03-02"),
-    items: [ { product_id: 2, quantity: 1, unit_price: 989.10 } ] },
-  { _id: 3, customer_id: 1, order_date: ISODate("2026-03-05"),
-    items: [ { product_id: 5, quantity: 1, unit_price: 999.00 },
-             { product_id: 10, quantity: 1, unit_price: 599.00 } ] }
+  { _id: 1, customer_id: 1, order_date: ISODate("2026-03-01"), status: "paid" },
+  { _id: 2, customer_id: 2, order_date: ISODate("2026-03-02"), status: "paid" },
+  { _id: 3, customer_id: 1, order_date: ISODate("2026-03-05"), status: "paid" }
+]);
+
+db.order_items.insertMany([
+  { _id: 1, order_id: 1, product_id: 1, quantity: 1, unit_price: 1249.00 },
+  { _id: 2, order_id: 1, product_id: 7, quantity: 1, unit_price: 549.00 },
+  { _id: 3, order_id: 2, product_id: 2, quantity: 1, unit_price: 989.10 },
+  { _id: 4, order_id: 3, product_id: 5, quantity: 1, unit_price: 999.00 },
+  { _id: 5, order_id: 3, product_id: 10, quantity: 1, unit_price: 599.00 }
 ]);
 ```
 
 Same 3 orders as [Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)
 — Alice has orders 1 and 3, Bob has order 2, and Carla has **zero orders**.
 
-## Step 2 — No junction table needed here
+## Step 2 — `order_items` keeps the many-to-many relationship
 
 [Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)'s many-to-many
-between `orders` and `products` needed a separate `order_items` table.
-Here, that relationship is already handled — it's embedded directly as each
-order's `items` array, decided back in [3.13](13-embedding-vs-referencing.md).
-A genuine many-to-many that *does* need real references on both sides (e.g.,
-products tagged with multiple categories, where tags are shared and queried
-independently) would instead store an array of IDs: `tags: [3, 7, 12]`.
+between `orders` and `products` needed a separate `order_items` table. This
+MongoDB model uses the same shape: every `order_items` document stores an
+`order_id` and a `product_id`. Both references are still plain fields, so
+MongoDB does not enforce them.
 
 ## Step 3 — The big honest difference: no enforcement
 
@@ -48,7 +58,7 @@ db.orders.insertOne({
   _id: 99,
   customer_id: 9999,     // this customer does not exist
   order_date: ISODate("2026-03-10"),
-  items: []
+  status: "pending"
 });
 // Succeeds. No error. MongoDB has no idea customer_id 9999 doesn't exist.
 ```
@@ -90,7 +100,7 @@ it directly against SQL's guarantees.
 | | SQL ([Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md)) | MongoDB |
 |---|---|---|
 | One-to-many | FK on the "many" side, enforced | Reference field, **not enforced** |
-| Many-to-many | Junction table, enforced both sides | Array of IDs, **not enforced** |
+| Many-to-many | Junction table, enforced both sides | `order_items` references, **not enforced** |
 | Insert with a bad reference | Rejected with an error | Silently succeeds |
 | Delete a still-referenced row | Rejected by default (`RESTRICT`) | Silently succeeds |
 | Who enforces correctness? | The database | Your application code |

@@ -107,13 +107,12 @@ worth seeing in full, not glossed over:
 
 ```js
 db.products.aggregate([
-  // 1. Revenue per product, from embedded order items across ALL orders
+  // 1. Revenue per product, from order_items
   { $lookup: {
-      from: "orders", let: { pid: "$_id" },
+      from: "order_items", let: { pid: "$_id" },
       pipeline: [
-        { $unwind: "$items" },
-        { $match: { $expr: { $eq: ["$items.product_id", "$$pid"] } } },
-        { $group: { _id: null, revenue: { $sum: { $multiply: ["$items.quantity", "$items.unit_price"] } } } }
+        { $match: { $expr: { $eq: ["$product_id", "$$pid"] } } },
+        { $group: { _id: null, revenue: { $sum: { $multiply: ["$quantity", "$unit_price"] } } } }
       ],
       as: "revenueData"
   }},

@@ -26,48 +26,49 @@ choose, for each relationship, between:
   separately (MongoDB's version of a foreign key, but never enforced by the
   database itself — see [3.14](14-relationships-in-mongodb.md)).
 
-## Step 3 — Embedding, done safely: order items
+## Step 3 — Embedding, done safely: customer contact details
 
 ```js
 {
   _id: 1,
-  customer_id: 1,
-  order_date: ISODate("2026-03-01"),
-  items: [
-    { product_id: 1, quantity: 1, unit_price: 1249.00 },
-    { product_id: 7, quantity: 1, unit_price: 549.00 }
+  name: "Alice Chen",
+  email: "alice@mail.com",
+  phones: ["+1-212-555-0101", "+1-212-555-0199"],
+  addresses: [
+    { type: "home", street: "10 Main St", city: "New York", country: "US" },
+    { type: "work", street: "20 Park Ave", city: "New York", country: "US" }
   ]
 }
 ```
 
-Compare this to [Lesson 2.10](../02-sql/13-relationships-and-foreign-keys.md),
-which needed a **separate `order_items` table** — a real relational
-requirement, not a stylistic choice, since SQL tables can't nest a list.
-Here, `items` lives directly inside its order. This is safe *specifically*
-because order line items are:
-- **Always fetched together** with their order — nobody asks for "line item
-  #4" without its order.
-- **Bounded** — an order has a handful of items, never millions.
-- **Never shared** — no other order ever needs *this exact* line item.
+Phone numbers and addresses belong to the customer, are normally read with
+the customer, and stay small and bounded. `phones` is an array of strings;
+`addresses` is an array of embedded documents, so each address keeps its
+type, street, city, and country together.
 
-## Step 4 — Referencing, done deliberately: the customer
+```js
+db.customers.find({
+  addresses: { $elemMatch: { type: "home", city: "New York" } }
+});
+```
+
+Use `$elemMatch` when the conditions must match the same address object.
+
+## Step 4 — Referencing, done deliberately: orders and products
 
 ```js
 {
   _id: 1,
-  customer_id: 1,     // a REFERENCE — not the customer's name/email/city
+  customer_id: 1,     // reference to a customer
   order_date: ISODate("2026-03-01"),
-  items: [ ... ]
+  status: "paid"
 }
 ```
 
-Why not embed Alice's full name/email/city into every order, the way `items`
-is embedded? Because that's **exactly** [Lesson 2.9](../02-sql/12-normalization.md)'s
-flat-table mistake, just moved into a document: Alice's info would be
-duplicated across every order she places, and changing her email would mean
-updating it everywhere it was copied. Referencing `customer_id` — and
-keeping customer details in their own `customers` collection — avoids that
-entirely, at the cost of a second lookup when you need her name.
+Orders reference their customer, and each `order_items` document references
+one order and one product. This keeps customer details, products, orders, and
+line items in their own collections. For example, changing Alice's email or a
+product's name happens in one document rather than in every order that used it.
 
 ```js
 db.customers.insertMany([
@@ -90,38 +91,38 @@ flowchart TD
     Q3 -->|No| EMB["Embed it"]
 ```
 
-| Question | `items` in an order | `customer` on an order |
+| Question | Customer phones and addresses | Customer, products, and order items |
 |---|---|---|
 | Always read together with parent? | Yes | Yes, but... |
 | Small and bounded? | Yes | Yes, but... |
-| Shared/reused by many other parents? | No — never reused | **Yes** — the same customer places many orders |
+| Shared/reused by many other parents? | No — they belong to one customer | **Yes** — each is used across related documents |
 | **Decision** | **Embed** | **Reference** |
 
 ## Step 6 — Our full schema, in MongoDB
 
 ```mermaid
 flowchart LR
-    subgraph orders doc
-        direction TB
-        O["_id, customer_id (ref), order_date"] --> I["items: [ ] (embedded array)"]
-    end
-    customers -.referenced by.-> orders
-    products -.referenced by.-> I
+    C["customers\nphones: [ ]\naddresses: [ { }, { } ]"]
+    O["orders\ncustomer_id (ref)"]
+    I["order_items\norder_id (ref)\nproduct_id (ref)"]
+    P["products"]
+    C --> O --> I
+    P --> I
 ```
 
-- `customers` — its own collection, referenced by `orders.customer_id`.
-- `orders` — references its customer, **embeds** its own line items.
-- `products` — its own collection, referenced by each embedded item's
-  `product_id` (a product is reused across many orders — reference it, for
-  exactly the same reason as the customer).
+- `customers` — embeds its own `phones` and `addresses`; referenced by
+  `orders.customer_id`.
+- `orders` — references its customer.
+- `order_items` — references both `orders` and `products`.
+- `products` — its own collection, reused by many order items.
 
 ## Step 7 — Recap
 
 | | SQL ([Lesson 2.9](../02-sql/12-normalization.md)) | MongoDB |
 |---|---|---|
 | Default | Always split into normalized tables | Choose per relationship |
-| Line items | Separate `order_items` table (required) | Embedded array (by choice, and it's safe here) |
-| Customer info | Separate `customers` table | Referenced `customer_id` (embedding here would reintroduce the exact same anomaly) |
+| Line items | Separate `order_items` table | Separate `order_items` collection with references |
+| Customer contact details | Separate `customers` table | Embedded `phones` and `addresses` |
 | Rule of thumb | "The key, the whole key, and nothing but the key" | "Embed what's always-together, bounded, and unshared; reference everything else" |
 
 ---

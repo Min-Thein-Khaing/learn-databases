@@ -23,7 +23,7 @@ document database brands and BSON, and then built a complete MongoDB system.
 | [3.12 The `$group` Stage](12-group-stage.md) | Per-category summaries, `$match` before *and* after |
 | [3.13 Embedding vs. Referencing](13-embedding-vs-referencing.md) | The central MongoDB design decision — and how it avoids (or reintroduces) SQL's anomalies |
 | [3.14 Relationships in MongoDB](14-relationships-in-mongodb.md) | References, with **no enforcement** — a genuine, honest tradeoff |
-| [3.15 `$lookup`](15-lookup-joins.md) | Joining collections — and the real cost of aggregating across embedded arrays |
+| [3.15 `$lookup`](15-lookup-joins.md) | Joining collections — including customers, orders, order items, and products |
 | [3.16 Aggregation Pipelines](16-aggregation-pipelines.md) | `$facet`, `$graphLookup` — MongoDB's CTEs and recursive queries |
 | [3.17 Schema Validation](17-schema-validation.md) | `$jsonSchema`, unique indexes — and what has no equivalent (`DEFAULT`, foreign keys) |
 | [3.18 Transactions](18-transactions.md) | Single documents are atomic for free; multi-document needs a session — with no `SAVEPOINT` |

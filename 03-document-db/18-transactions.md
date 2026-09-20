@@ -8,15 +8,13 @@ to succeed together, or not at all.
 
 ## Step 1 — The good news first: single documents are already atomic
 
-Because [3.13](13-embedding-vs-referencing.md) embedded `items`
-directly inside each order, **inserting one whole order — items and all —
-is already a single, atomic write**, with no transaction needed at all. This
-is a genuine MongoDB strength: a well-embedded document sidesteps the
-multi-statement problem entirely for anything that fits in one document.
+Each individual document write is atomic. The customer contact details in
+[3.13](13-embedding-vs-referencing.md), for example, can be updated inside
+one `customers` document without a transaction.
 
-The remaining gap: giving Carla her first order still means **two separate
-documents** changing together — inserting her order, *and* reducing
-`products` stock. That still needs a real transaction.
+Creating an order changes **three separate documents**: insert an `orders`
+document, insert its `order_items` document, and reduce `products` stock.
+That needs a real transaction.
 
 ## Step 2 — Starting a transaction
 
@@ -44,8 +42,13 @@ try {
     _id: 4,
     customer_id: 3,
     order_date: ISODate("2026-03-10"),
-    items: [ { product_id: 4, quantity: 2, unit_price: 599.00 } ]
+    status: "paid"
   }, { session });
+
+  db.order_items.insertOne(
+    { _id: 6, order_id: 4, product_id: 4, quantity: 2, unit_price: 599.00 },
+    { session }
+  );
 
   db.products.updateOne(
     { _id: 4 },
@@ -62,7 +65,7 @@ try {
 }
 ```
 
-`abortTransaction()` undoes **both** operations — including the `orders`
+`abortTransaction()` undoes **all three** operations — including the `orders`
 insert that, on its own, would have succeeded. Same all-or-nothing guarantee
 as [Lesson 2.14](../02-sql/17-transactions.md)'s `ROLLBACK`.
 
@@ -82,8 +85,13 @@ try {
     _id: 5,
     customer_id: 3,   // Carla's first order
     order_date: ISODate("2026-03-10"),
-    items: [ { product_id: 4, quantity: 2, unit_price: 599.00 } ]
+    status: "paid"
   }, { session });
+
+  db.order_items.insertOne(
+    { _id: 6, order_id: 5, product_id: 4, quantity: 2, unit_price: 599.00 },
+    { session }
+  );
 
   db.products.updateOne(
     { _id: 4 },
@@ -109,8 +117,13 @@ try {
     _id: 6,
     customer_id: 2,
     order_date: ISODate("2026-03-12"),
-    items: [ { product_id: 3, quantity: 1, unit_price: 1799.10 } ]
+    status: "paid"
   }, { session });
+
+  db.order_items.insertOne(
+    { _id: 7, order_id: 6, product_id: 3, quantity: 1, unit_price: 1799.10 },
+    { session }
+  );
 
   db.products.updateOne({ _id: 3 }, { $inc: { stock: -1 } }, { session });
 

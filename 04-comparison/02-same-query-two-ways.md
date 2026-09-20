@@ -52,9 +52,10 @@ ORDER BY total_spent DESC;
 // MongoDB (Lesson 3.15)
 db.customers.aggregate([
   { $lookup: { from: "orders", localField: "_id", foreignField: "customer_id", as: "orders" } },
+  { $lookup: { from: "order_items", localField: "orders._id", foreignField: "order_id", as: "items" } },
   { $project: { name: 1,
       total_spent: { $sum: { $map: {
-          input: { $reduce: { input: "$orders.items", initialValue: [], in: { $concatArrays: ["$$value", "$$this"] } } },
+          input: "$items",
           as: "item", in: { $multiply: ["$$item.quantity", "$$item.unit_price"] }
       }}}
   }},
@@ -62,12 +63,8 @@ db.customers.aggregate([
 ]);
 ```
 Both return: **Alice 3396.00, Bob 989.10 (at this point in the narrative),
-Carla 0**. This is the clearest gap in this whole lesson — SQL's version
-reads in one pass; MongoDB's needs `$reduce`/`$concatArrays`/`$map` just to
-flatten nested arrays across documents before it can even sum them. This is
-the direct cost of [3.13](../03-document-db/13-embedding-vs-referencing.md)'s
-embedding choice — cheap for reading one order, expensive for aggregating
-across many.
+Carla 0**. SQL expresses the relationship through `JOIN`s; MongoDB uses two
+`$lookup` stages and `$map` to calculate the line totals.
 
 ## Query 4: Group — average price per category
 

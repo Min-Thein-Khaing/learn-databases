@@ -125,8 +125,11 @@ const session = db.getMongo().startSession();
 session.startTransaction();
 try {
   db.orders.insertOne(
-    { _id: 7, customer_id: 3, order_date: new Date(),
-      items: [{ product_id: 4, quantity: 2, unit_price: 599.00 }] },
+    { _id: 7, customer_id: 3, order_date: new Date(), status: "paid" },
+    { session }
+  );
+  db.order_items.insertOne(
+    { _id: 8, order_id: 7, product_id: 4, quantity: 2, unit_price: 599.00 },
     { session }
   );
   db.products.updateOne({ _id: 4 }, { $inc: { stock: -2 } }, { session });
@@ -168,8 +171,8 @@ db.orders.createIndex({ customer_id: 1 });
 ```
 
 Only `_id` is automatically indexed on every collection — same as SQL's
-`PRIMARY KEY`. Reference fields like `customer_id` (even nested ones like
-`items.product_id`) need a manual `createIndex()` call, the same gap as SQL
+`PRIMARY KEY`. Reference fields like `customer_id` and `order_items.product_id`
+need a manual `createIndex()` call, the same gap as SQL
 not auto-indexing foreign key columns.
 </details>
 
@@ -410,9 +413,10 @@ all customers — combining `$lookup`, the array-flattening pattern from
 ```js
 db.customers.aggregate([
   { $lookup: { from: "orders", localField: "_id", foreignField: "customer_id", as: "orders" } },
+  { $lookup: { from: "order_items", localField: "orders._id", foreignField: "order_id", as: "items" } },
   { $addFields: {
       total_spent: { $sum: { $map: {
-          input: { $reduce: { input: "$orders.items", initialValue: [], in: { $concatArrays: ["$$value", "$$this"] } } },
+          input: "$items",
           as: "item",
           in: { $multiply: ["$$item.quantity", "$$item.unit_price"] }
       }}}

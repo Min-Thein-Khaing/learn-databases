@@ -24,11 +24,11 @@ instead of scanning every one.
 
 ```js
 db.orders.createIndex({ customer_id: 1 });
-db.orders.createIndex({ "items.product_id": 1 });   // can index INSIDE embedded arrays too
+db.order_items.createIndex({ product_id: 1 });
 ```
 
-That second line is worth noticing — you can index a field nested inside an
-embedded array, something SQL's flat columns have no equivalent for.
+`order_items.product_id` is a reference field used by product reports, so it
+needs its own index just as a foreign-key column would in SQL.
 
 ## Step 3 — Reading `.explain()`
 

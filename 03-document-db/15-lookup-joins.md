@@ -225,22 +225,23 @@ equivalent exists (`$unionWith` combined with two opposite `$lookup`s), but
 it's rare enough in practice that most teams restructure the question
 instead of reaching for it.
 
-## Step 6 — Joining 3 collections through an embedded array
+## Step 6 — Joining 4 collections with references
 
 ```js
-db.orders.aggregate([
-  { $unwind: "$items" },
-  { $lookup: { from: "customers", localField: "customer_id", foreignField: "_id", as: "customer" } },
+db.order_items.aggregate([
+  { $lookup: { from: "orders", localField: "order_id", foreignField: "_id", as: "order" } },
+  { $unwind: "$order" },
+  { $lookup: { from: "customers", localField: "order.customer_id", foreignField: "_id", as: "customer" } },
   { $unwind: "$customer" },
-  { $lookup: { from: "products", localField: "items.product_id", foreignField: "_id", as: "product" } },
+  { $lookup: { from: "products", localField: "product_id", foreignField: "_id", as: "product" } },
   { $unwind: "$product" },
   { $project: {
       customer: "$customer.name",
-      order_id: "$_id",
+      order_id: "$order_id",
       product: "$product.name",
-      quantity: "$items.quantity",
-      unit_price: "$items.unit_price",
-      line_total: { $multiply: ["$items.quantity", "$items.unit_price"] }
+      quantity: "$quantity",
+      unit_price: "$unit_price",
+      line_total: { $multiply: ["$quantity", "$unit_price"] }
   }},
   { $sort: { order_id: 1 } }
 ]);
@@ -253,25 +254,22 @@ db.orders.aggregate([
 | Alice Chen | 3 | iPad Pro | 1 | 999.00 | 999.00 |
 | Alice Chen | 3 | Mac Mini | 1 | 599.00 | 599.00 |
 
-Same result as [Lesson 2.11](../02-sql/14-joins.md)'s SQL join — but notice
-the extra step: `$unwind: "$items"` had to come first, to turn each order's
-*embedded array* of items into separate documents the pipeline could join
-against individually.
+Same result as [Lesson 2.11](../02-sql/14-joins.md)'s SQL join. Each
+`order_items` document already represents one line item, so the pipeline
+joins it to its order, customer, and product.
 
 ## Step 7 — Bonus: total spent per customer
 
 ```js
 db.customers.aggregate([
   { $lookup: { from: "orders", localField: "_id", foreignField: "customer_id", as: "orders" } },
+  { $lookup: { from: "order_items", localField: "orders._id", foreignField: "order_id", as: "items" } },
   { $project: {
       name: 1,
       total_spent: {
         $sum: {
           $map: {
-            input: { $reduce: {
-              input: "$orders.items", initialValue: [],
-              in: { $concatArrays: ["$$value", "$$this"] }
-            }},
+            input: "$items",
             as: "item",
             in: { $multiply: ["$$item.quantity", "$$item.unit_price"] }
           }
@@ -287,15 +285,9 @@ db.customers.aggregate([
 | Bob Diaz | 989.10 |
 | Carla Ruiz | 0 |
 
-Same numbers as [Lesson 2.11](../02-sql/14-joins.md)'s SQL version — but
-worth being honest about the cost: SQL solved this with a `JOIN` + `SUM` +
-`GROUP BY`. Here, each customer's `orders` embeds an *array of arrays* of
-items (one items-array per order), so getting one flat total requires
-`$reduce` to flatten them, then `$map` to compute each line's value, then
-`$sum` to total it. **This is the real tradeoff from embedding**: reading a
-single order is trivial (Step 4 was easy for a *known* order), but
-aggregating *across* many documents' embedded arrays is genuinely more
-complex than SQL's equivalent.
+Same numbers as [Lesson 2.11](../02-sql/14-joins.md)'s SQL version. The
+first `$lookup` gets each customer's orders and the second gets their line
+items. `$map` computes each line's value and `$sum` totals it.
 
 ## Recap
 

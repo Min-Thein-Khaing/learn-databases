@@ -244,15 +244,14 @@ Using the decision rule from
 [3.13 Embedding vs. Referencing](13-embedding-vs-referencing.md), decide
 **embed** or **reference** for each, and justify it with the 3-question rule:
 
-1. An order's line items (`items: [...]`).
+1. A customer's phone numbers and addresses.
 2. A product's reviews, where a popular product could have thousands, and reviews are often queried independently (e.g. "show all of Alice's reviews").
 
 <details>
 <summary>Show answer</summary>
 
-1. **Embed.** Line items are always fetched together with their order,
-bounded (an order never has millions of items), and never reused by any
-other order.
+1. **Embed.** Phone numbers and addresses are fetched with their customer,
+bounded, and never reused by another customer.
 2. **Reference** — a separate `reviews` collection. Reviews are **not**
 bounded (a popular product could have thousands) and are frequently queried
 **independently** of any one product — both answers point away from
@@ -275,7 +274,7 @@ From [3.14 Relationships in MongoDB](14-relationships-in-mongodb.md):
 ```js
 // 1.
 db.orders.insertOne({
-  _id: 99, customer_id: 9999, order_date: new Date(), items: []
+  _id: 99, customer_id: 9999, order_date: new Date(), status: "pending"
 });
 // Succeeds. No error — MongoDB has no idea customer_id 9999 doesn't exist.
 
